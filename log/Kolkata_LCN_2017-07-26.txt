@@ -1,0 +1,3 @@
+2017-July-26::20:50:08  11805 name changed from'NHK WORLD' to 'STAR SPORTS FIRST'
+2017-July-26::20:50:25  package changed as bronze='YES',silver=' ',gold='YES',platinum='YES',power=' ',price='15' WHERE sid='11805'
+2017-July-26::21:20:53  package changed as bronze=' ',silver=' ',gold='YES',platinum='YES',power=' ',price='15' WHERE sid='11805'

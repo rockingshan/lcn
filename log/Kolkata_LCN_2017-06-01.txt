@@ -1,0 +1,5 @@
+2017-June-01::12:34:26  package changed as bronze=' ',silver=' ',gold=' ',platinum='YES',power='YES',price='10' WHERE sid='11402'
+2017-June-01::12:34:43  package changed as bronze=' ',silver=' ',gold=' ',platinum='YES',power='YES',price='12' WHERE sid='11104'
+2017-June-01::12:34:55  package changed as bronze=' ',silver=' ',gold=' ',platinum='YES',power='YES',price='12' WHERE sid='22007'
+2017-June-01::12:35:18  package changed as bronze=' ',silver=' ',gold=' ',platinum='YES',power='YES',price='12' WHERE sid='11010'
+2017-June-01::12:35:34  package changed as bronze=' ',silver=' ',gold=' ',platinum='YES',power='YES',price='10' WHERE sid='11305'

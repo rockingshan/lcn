@@ -1,0 +1,3 @@
+2017-June-22::15:08:32  11010 name changed from'FX' to 'STAR SPORTS SELECT 2'
+2017-June-22::15:08:54  11010 updated lcn 147
+2017-June-22::15:18:27  22708 name changed from'KANAK NEWS' to 'MBC'

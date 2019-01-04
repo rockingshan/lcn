@@ -1,0 +1,1 @@
+2017-April-19::18:50:40  package changed as bronze=' ',silver=' ',gold='YES',platinum='YES',power=' ',price='5' WHERE sid='10710'

@@ -1,0 +1,5 @@
+2017-February-10::20:09:06  11111 updated lcn 151
+2017-February-10::20:09:22  15110 updated lcn 149
+2017-February-10::20:09:50  22516 name changed from'ZEE Q' to 'DSPORTS'
+2017-February-10::20:10:13  22516 updated lcn 146
+2017-February-10::20:26:55  package changed as bronze=' ',silver=' ',gold=' ',platinum='YES',power=' ',price='15' WHERE sid='22516'

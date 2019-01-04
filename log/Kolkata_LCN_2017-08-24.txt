@@ -1,0 +1,2 @@
+2017-August-24::21:10:38  15202 name changed from'TEST SIGNAL' to 'MOVIES NOW HD'
+2017-August-24::21:19:52  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',power=' ',price='10' WHERE sid='11009'

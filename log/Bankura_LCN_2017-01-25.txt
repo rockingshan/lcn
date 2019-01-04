@@ -1,0 +1,2 @@
+2017-January-25::10:17:23  99999 'FULL TEST' position 20 added
+2017-January-25::10:18:11  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',power='YES',price='' WHERE sid='99999'

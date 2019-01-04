@@ -1,0 +1,2 @@
+2017-August-12::16:43:50  package changed as bronze=' ',silver='YES',gold='YES',platinum='YES',power=' ',price='20' WHERE sid='11702'
+2017-August-12::16:44:00  package changed as bronze=' ',silver=' ',gold=' ',platinum='YES',power=' ',price='20' WHERE sid='11703'
