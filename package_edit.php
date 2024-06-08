@@ -15,14 +15,14 @@ if (isset($_GET['edit_flag'])){
 	$silver=$_GET['silverpack'];
 	$gold=$_GET['goldpack'];
 	$platinum=$_GET['platinumpack'];
-	//$power=$_GET['powerpack'];
+	$diamond=$_GET['diamond'];
 	$price=$_GET['price'];
-	$pack_update_sql="UPDATE package_tb SET bronze='$bronze',silver='$silver',gold='$gold',platinum='$platinum',price='$price' WHERE sid='$old_sid'";
+	$pack_update_sql="UPDATE package_tb SET bronze='$bronze',silver='$silver',gold='$gold',diamond='$diamond',platinum='$platinum',price='$price' WHERE sid='$old_sid'";
 	$editpack_result=mysqli_query($con,$pack_update_sql);
 	if (!$editpack_result) { // add this check.
     die('Error: ' . mysqli_error($con));
     }
-    write_log("package changed as bronze='$bronze',silver='$silver',gold='$gold',platinum='$platinum',power='$power',price='$price' WHERE sid='$old_sid'");
+    write_log("package changed as bronze='$bronze',silver='$silver',gold='$gold',platinum='$platinum',diamond='$diamond',price='$price' WHERE sid='$old_sid'");
 	header("location:secure_page.php");
 }else{
 $pcedit_sid=$_GET['sid'];
@@ -62,6 +62,7 @@ if (!$result) { // add this check.
     <th>Bronze </th>
     <th> Silver </th>
     <th> Gold </th>
+	<th> Diamond </th>
     <th> Platinum </th>
     <th> Price(&#8377) </th>
   </tr>
@@ -82,14 +83,14 @@ if (!$result) { // add this check.
     <option value="YES" <?php if($package_result['gold'] == "YES") { echo "SELECTED"; } ?>>YES</option>
     <option value=" " <?php if($package_result['gold'] == "") { echo "SELECTED"; } ?>>NO</option
   </select></td>
-    <td><select name="platinumpack">
+	<td><select name="diamond">
+    <option value="YES" <?php if($package_result['diamond'] == "YES") { echo "SELECTED"; }?>>YES</option>
+    <option value=" " <?php if($package_result['diamond'] == "") { echo "SELECTED"; } ?>>NO</option
+  </select></td>
+      <td><select name="platinumpack">
     <option value="YES" <?php if($package_result['platinum'] == "YES") { echo "SELECTED"; } ?>>YES</option>
     <option value=" " <?php if($package_result['platinum'] == "") { echo "SELECTED"; } ?>>NO</option
   </select></td>
-    <!--<td><select name="powerpack">
-    <option value="YES" <?php /*if($package_result['power'] == "YES") { echo "SELECTED"; } */?>>YES</option>
-    <option value=" " <?php /*if($package_result['power'] == "") { echo "SELECTED"; } */?>>NO</option
-  </select></td>-->
     <td><div class="form-group"><input class="form-control input-sm" id="inputsm" type="text" name="price" value="<?php echo $package_result['price'] ?>" /></div></td>
  </tr>
  <tr>

@@ -22,7 +22,5 @@ $delete_sid=$_GET['sid'];
     $_SESSION['sidcounter'][]=$new_sid;
     write_log($delete_sid." deleted");
 header("location:secure_page.php");
-
-
 ?>
     

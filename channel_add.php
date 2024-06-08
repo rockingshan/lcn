@@ -27,7 +27,7 @@ if (isset($_GET['edit_flag'])) {
 	
 	$sql1 = "INSERT INTO `channel_tb`(`sid`, `channel`, `lcn`, `lcnhex`) VALUES ('$new_sid','$new_name','$new_lcn','$new_lcn_hex')";
 	$sql2 = "INSERT INTO `sid_tb` (`sid`, `ts`,`freq`,`sidhex`) VALUES ('$new_sid','$new_tsid','$new_freq','$new_sid_hex')";
-    $sql3 = "INSERT INTO `package_tb`(`sid`, `bronze`, `silver`, `gold`, `platinum`, `power`, `price`) VALUES ('$new_sid','','','','','','')";
+    $sql3 = "INSERT INTO `package_tb`(`sid`, `bronze`, `silver`, `gold`, `platinum`, `diamond`, `price`) VALUES ('$new_sid','','','','','','')";
     $er_res = mysqli_query($con, $sql1);
     $er_res = mysqli_query($con, $sql2);
 	$er_res = mysqli_query($con, $sql3);

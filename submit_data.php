@@ -11,13 +11,14 @@ mysqli_select_db($con,$_SESSION['select_db']) or die("No database");
 date_default_timezone_set('Asia/Kolkata');
 
 $ts_array=array();
-$sid_un_array=array_unique($_SESSION['sidcounter']);
-foreach($sid_un_array as $sid_value){
-	$sid_sql="SELECT ts from sid_tb WHERE sid=$sid_value";
-	$sid_result=mysqli_query($con, $sid_sql);
-	$sid_res_row=mysqli_fetch_array($sid_result);
-	$ts_array[]=$sid_res_row['ts'];
-
+if (isset($_SESSION['sidcounter'])) {
+	$sid_un_array = array_unique($_SESSION['sidcounter']);
+	foreach ($sid_un_array as $sid_value) {
+		$sid_sql = "SELECT ts from sid_tb WHERE sid=$sid_value";
+		$sid_result = mysqli_query($con, $sid_sql);
+		$sid_res_row = mysqli_fetch_array($sid_result);
+		$ts_array[] = $sid_res_row['ts'];
+	}
 }
 
 $ts_un_array=array_unique($ts_array);
@@ -84,11 +85,13 @@ foreach($ts_un_array as $ts_value){
 </thead>
 <tbody>
 <?php
-foreach($_SESSION['sid_lcn'] as $sidlcn_array){
-    foreach($sidlcn_array as $session_sid=>$session_lcnhex){
-        echo "<tr><td>".$session_sid."</td>";
-        echo "<td>".$session_lcnhex."</td></tr>";
-    }
+if(isset($_SESSION['sid_lcn'])){
+	foreach($_SESSION['sid_lcn'] as $sidlcn_array){
+		foreach($sidlcn_array as $session_sid=>$session_lcnhex){
+       	 echo "<tr><td>".$session_sid."</td>";
+			echo "<td>".$session_lcnhex."</td></tr>";
+		}
+	}
 }
 
 ?>

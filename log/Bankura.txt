@@ -1,0 +1,25 @@
+2019-May-07::08:19:58  1035 lcn changed to 3
+2019-May-07::08:19:58  1021 lcn changed to 5
+2019-May-07::08:31:30  1076 lcn changed to 6
+2019-May-07::08:31:30  1015 lcn changed to 7
+2019-May-07::08:31:59  1082 lcn changed to 45
+2019-May-07::08:31:59  1018 lcn changed to 48
+2019-May-07::08:32:32  1353 lcn changed to 108
+2019-May-07::08:32:32  1363 lcn changed to 107
+2019-May-07::08:34:43  1032 LCN changed from'292' to '313'
+2019-May-07::08:37:09  1395 lcn changed to 39
+2019-May-07::08:37:09  1355 lcn changed to 37
+2019-October-16::16:45:42  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='12' WHERE sid='1126'
+2019-October-16::16:45:59  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='12' WHERE sid='1018'
+2019-October-16::16:46:07  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='12' WHERE sid='1042'
+2019-October-16::16:46:14  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='12' WHERE sid='1021'
+2019-October-16::16:46:31  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='0.10' WHERE sid='1340'
+2019-October-16::16:46:38  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='1' WHERE sid='1014'
+2019-October-16::16:46:46  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='5' WHERE sid='1052'
+2019-October-16::16:46:55  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='12' WHERE sid='1002'
+2019-October-16::16:47:03  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='12' WHERE sid='1003'
+2019-October-16::16:47:17  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='1' WHERE sid='1006'
+2019-October-16::16:47:51  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='0.10' WHERE sid='1037'
+2019-October-16::16:50:55  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='1' WHERE sid='1312'
+2019-October-16::16:51:03  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='12' WHERE sid='1337'
+2020-July-16::12:48:43  1176 name changed from'DSPORTS' to 'EUROSPORTS'

@@ -31,10 +31,12 @@ $objPHPExcel->getProperties()->setCreator("Meghbela Digital")
 // Add Heading
 $objPHPExcel->setActiveSheetIndex(0)
             ->setCellValue('A1', 'GENRE')
-            ->setCellValue('B1', 'LCN')
-            ->setCellValue('C1', 'CHANNEL NAME');
+            ->setCellValue('D1', 'LCN')
+			->setCellValue('B1', 'CHANNEL NAME')
+			->setCellValue('C1', 'BROADCASTER')
+			->setCellValue('E1', 'RANK');
 
-$objPHPExcel->getActiveSheet()->getStyle('A1:C1')->applyFromArray(
+$objPHPExcel->getActiveSheet()->getStyle('A1:E1')->applyFromArray(
 		array(
 			'font'    => array(
 				'bold'      => true
@@ -63,9 +65,13 @@ $objPHPExcel->getActiveSheet()->getStyle('A1:C1')->applyFromArray(
 $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
 $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
 $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
+$objPHPExcel->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
+$objPHPExcel->getActiveSheet()->getColumnDimension('E')->setAutoSize(true);
 $objPHPExcel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 $objPHPExcel->getActiveSheet()->getStyle('B1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 $objPHPExcel->getActiveSheet()->getStyle('C1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+$objPHPExcel->getActiveSheet()->getStyle('D1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+$objPHPExcel->getActiveSheet()->getStyle('E1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 
 //making the search in db
 $sql = "SELECT * FROM channel_tb,lcn_tb WHERE channel_tb.lcn=lcn_tb.lcn ORDER BY lcn_tb.lcn";
@@ -75,12 +81,23 @@ if (!$result) { // add this check.
     die('Invalid query: ' . mysqli_error());
 }
 $rowcount=2;
+$rank_check = "HINDI MOVIES";
+$rank_placeholder = 0;
 while($row = mysqli_fetch_array($result)){
+	if($row['genre']==$rank_check){
+		$rank_placeholder++;
+	}
+	else{
+			$rank_placeholder = 1;
+		}
 
 	$objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowcount, $row['genre']);
-  $objPHPExcel->getActiveSheet()->SetCellValue('B'.$rowcount, $row['lcn']);
-  $objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowcount, $row['channel']);
+  $objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowcount, $row['lcn']);
+  $objPHPExcel->getActiveSheet()->SetCellValue('B'.$rowcount, $row['channel']);
+  $objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowcount, $row['broadcaster']);
+  $objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowcount, $rank_placeholder);
   $rowcount++;
+  $rank_check = $row['genre'];
 }
 $file_name=$_SESSION['city']."_LCN_".Date('Y-m-d').".xlsx";
 $objPHPExcel->setActiveSheetIndex(0);

@@ -8,25 +8,23 @@ session_start();
 if (!isset($_SESSION['user'])) {
 	header("location:index.php");
 }
-if(isset($_POST['selectdb'])){
-if ($_POST['selectdb']=='db_1') {
-  $_SESSION['select_db'] = 'meghbela_lcn_db_kol';
-  $_SESSION['city'] = 'Kolkata';
-}elseif ($_POST['selectdb']=='db_2') {
-  $_SESSION['select_db'] = 'meghbela_lcn_db_bpc';
-  $_SESSION['city'] = 'Berhampore';
-}elseif ($_POST['selectdb']=='db_3') {
-  $_SESSION['select_db'] = 'meghbela_lcn_db_hlz';
-  $_SESSION['city'] = 'Haldia';
-}elseif ($_POST['selectdb']=='db_4') {
-  $_SESSION['select_db'] = 'meghbela_lcn_db_bqa';
-  $_SESSION['city'] = 'Bankura';
-}
-}
 //starting the connection to db
 require_once "include/connect.php";
 include 'include/log.php';
 //Seleceting the database
+if(isset($_POST['selectdb'])){
+  $db_id = $_POST['selectdb'];
+  $query_dbname = "SELECT * FROM city_tb WHERE city_id = $db_id";
+  $query_db_result = mysqli_fetch_assoc(mysqli_query($auth,$query_dbname)); //running query on Kol database city table
+  mysqli_close($auth);
+  $_SESSION['select_db'] = $query_db_result['db_name'];
+  $_SESSION['city'] = $query_db_result['city_name'];
+
+ 
+  unset($_SESSION['sidcounter']);
+  unset($_SESSION['sid_lcn']);
+}
+
 
 mysqli_select_db($con,$_SESSION['select_db']) or die("No database");
 //making the search in db
@@ -67,11 +65,12 @@ if (!$result) { // add this check.
 
 <script src="lib/login.js"></script>
 
-<script src="lib/bootstrap-table.js"></script>
+<script src="lib/bootstrap-table.min.js"></script>
 <script src="lib/bootstrap-table-toolbar.js"></script>
 
 
 <link rel="stylesheet" href="lib/jquery.modal.min.css">
+
 
 
 <script>
@@ -114,11 +113,17 @@ function confirmAction(){
       </li>
       <li><a href="submit_data.php">Get BAT Submit Data</a></li>
       <li><a href="channel_add.php" rel="modal:open">Add new Channel</a></li>
-			<li><a href="mod_log.php">Modification logs</a></li>
+      <li><a href="mod_log.php">Modification logs</a></li>
+      <?php
+      if ($_SESSION['is_admin'] == 1) {
+        echo "<li><a href=\"adduser.php\" class=\"text-info\" rel=\"modal:open\">Add User</a></li>";
+        echo "<li><a href=\"viewmodifyuser.php\" class=\"text-info\" >View/Modify User</a></li>";
+      }
+      ?>
     </ul>
 
     <ul class="nav navbar-nav navbar-right">
-			<li><a href="db_select.php"><strong><span class="glyphicon glyphicon-send"></span> <?php echo $_SESSION['city'] ?></strong></a></li>
+			<li><a href="city_select.php"><strong><span class="glyphicon glyphicon-send"></span> <?php echo $_SESSION['city'] ?></strong></a></li>
       <li><a href="logout.php"><span class="glyphicon glyphicon-log-out"></span> Log Out</a></li>
     </ul>
   </div>
@@ -126,7 +131,7 @@ function confirmAction(){
 <!-- ALL MODAL START HERE -->
 
 
-<div class="container">
+<div class="container-fluid">
 
 <!--initializing the display variable to print the table on webpage -->
 <table cellpadding="1" align="center"
@@ -170,15 +175,14 @@ echo $display;
 </tbody>
 </table>
 </div>
-
+<div class="navbar navbar-inverse navbar-fixed-bottom">
 <footer class="footer">
-<div class="copyright">
   <div class="container">
     <div class="col-md-6">
-      <p>&copy; 2012-<?php echo date("Y"); ?> All Rights with Meghbela Digital</p>
+      <p class="text-warning">&copy; 2012-<?php echo date("Y"); ?> All Rights with Meghbela Digital</p>
     </div>
   </div>
-</div>
 </footer>
+</div>
 </body>
 </html>

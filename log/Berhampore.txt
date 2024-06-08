@@ -1,0 +1,58 @@
+2019-April-03::06:21:39  35 lcn changed to 2
+2019-April-03::06:21:39  175 lcn changed to 1
+2019-April-24::10:42:36  164 LCN changed from'1005' to '1006'
+2019-April-25::08:02:23  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='19' WHERE sid='13'
+2019-April-25::08:02:39  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='12' WHERE sid='192'
+2019-April-25::08:02:52  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='0.10' WHERE sid='71'
+2019-April-25::08:03:06  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='0.10' WHERE sid='582'
+2019-April-25::08:03:21  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='15' WHERE sid='12'
+2019-April-25::08:03:35  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='6' WHERE sid='95'
+2019-April-25::08:03:54  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='2' WHERE sid='17'
+2019-April-25::08:04:07  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='1' WHERE sid='11'
+2019-April-25::08:04:18  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='0.10' WHERE sid='219'
+2019-April-25::08:04:53  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='0.10' WHERE sid='10'
+2019-April-25::08:05:07  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='0.10' WHERE sid='592'
+2019-April-25::08:05:21  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='0.10' WHERE sid='180'
+2019-April-25::08:05:33  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='1' WHERE sid='294'
+2019-April-25::08:05:57  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='0.10' WHERE sid='569'
+2019-April-25::08:06:10  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='0.10' WHERE sid='196'
+2019-April-25::08:06:24  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='0.10' WHERE sid='181'
+2019-April-25::08:06:36  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='15' WHERE sid='518'
+2019-April-25::08:06:51  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='15' WHERE sid='183'
+2019-April-25::08:07:42  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='19' WHERE sid='588'
+2019-April-25::08:08:15  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='0.10' WHERE sid='623'
+2019-April-25::08:16:23  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='19' WHERE sid='15'
+2019-April-25::08:16:36  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='2' WHERE sid='87'
+2019-April-25::08:16:49  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='0.10' WHERE sid='99'
+2019-May-07::07:59:00  82 lcn changed to 5
+2019-May-07::07:59:00  12 lcn changed to 3
+2019-May-07::08:05:59  95 lcn changed to 6
+2019-May-07::08:05:59  48 lcn changed to 7
+2019-May-07::08:07:04  192 lcn changed to 45
+2019-May-07::08:07:04  83 lcn changed to 48
+2019-May-07::08:12:17  334 lcn changed to 108
+2019-May-07::08:12:17  337 lcn changed to 107
+2019-May-07::08:14:20  355 LCN changed from'317' to '313'
+2019-May-07::08:15:48  292 lcn changed to 39
+2019-May-07::08:15:48  304 lcn changed to 37
+2019-May-07::09:53:07  662 name changed from'TRANSMEDIA' to 'AAMAR CINEMA'
+2019-May-07::09:53:47  236 name changed from'TIMES NOW HD' to 'TIMES NOW WORLD HD'
+2019-May-07::10:02:34  656 deleted
+2019-October-16::16:38:45  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='12' WHERE sid='96'
+2019-October-16::16:39:16  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='12' WHERE sid='611'
+2019-October-16::16:39:25  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='12' WHERE sid='565'
+2019-October-16::16:39:34  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='1' WHERE sid='103'
+2019-October-16::16:39:56  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='0.10' WHERE sid='60'
+2019-October-16::16:40:11  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='1' WHERE sid='84'
+2019-October-16::16:40:19  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='12' WHERE sid='32'
+2019-October-16::16:40:29  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='12' WHERE sid='33'
+2019-October-16::16:40:38  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='5' WHERE sid='41'
+2019-October-16::16:40:46  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='1' WHERE sid='65'
+2019-October-16::16:40:59  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='0.10' WHERE sid='591'
+2019-October-16::16:41:13  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='12' WHERE sid='83'
+2019-October-16::16:41:21  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='12' WHERE sid='86'
+2019-October-16::16:41:29  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='12' WHERE sid='82'
+2019-November-05::10:15:16  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='12' WHERE sid='13'
+2019-November-05::10:15:26  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='12' WHERE sid='588'
+2019-November-05::10:15:39  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='12' WHERE sid='15'
+2019-November-05::10:15:39  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='12' WHERE sid='15'

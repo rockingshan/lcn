@@ -1,0 +1,24 @@
+2019-May-07::08:55:49  464 lcn changed to 3
+2019-May-07::08:55:49  480 lcn changed to 5
+2019-May-07::08:56:12  697 lcn changed to 6
+2019-May-07::08:56:12  469 lcn changed to 7
+2019-May-07::08:56:47  443 lcn changed to 48
+2019-May-07::08:56:47  450 lcn changed to 45
+2019-May-07::08:57:11  786 lcn changed to 108
+2019-May-07::08:57:11  784 lcn changed to 107
+2019-May-07::09:18:11  818 LCN changed from'313' to '317'
+2019-May-07::09:45:24  774 lcn changed to 37
+2019-May-07::09:45:24  770 lcn changed to 39
+2019-October-16::16:41:43  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='12' WHERE sid='443'
+2019-October-16::16:41:52  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='12' WHERE sid='462'
+2019-October-16::16:42:02  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='12' WHERE sid='480'
+2019-October-16::16:42:10  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='12' WHERE sid='444'
+2019-October-16::16:42:26  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='12' WHERE sid='712'
+2019-October-16::16:42:36  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='1' WHERE sid='588'
+2019-October-16::16:42:50  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='0.10' WHERE sid='563'
+2019-October-16::16:42:59  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='1' WHERE sid='562'
+2019-October-16::16:43:06  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='12' WHERE sid='400'
+2019-October-16::16:43:14  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='12' WHERE sid='440'
+2019-October-16::16:43:21  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='5' WHERE sid='510'
+2019-October-16::16:45:11  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='1' WHERE sid='461'
+2019-October-16::16:45:20  package changed as bronze=' ',silver=' ',gold=' ',platinum=' ',diamond=' ',price='0.10' WHERE sid='580'

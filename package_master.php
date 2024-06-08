@@ -35,8 +35,8 @@ $objPHPExcel->setActiveSheetIndex(0)
                            ->setCellValue('D1', 'BRONZE')
                            ->setCellValue('E1', 'SILVER')
                            ->setCellValue('F1', 'GOLD')
-                           ->setCellValue('G1', 'PLATINUM')
-                           ->setCellValue('H1', 'POWER')
+                           ->setCellValue('G1', 'DIAMOND')
+                           ->setCellValue('H1', 'PLATINUM')
                            ->setCellValue('I1', 'PRICE');
 
 $objPHPExcel->getActiveSheet()->getStyle('A1:I1')->applyFromArray(
@@ -98,8 +98,8 @@ while($row = mysqli_fetch_array($result)){
   $objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowcount, $row['bronze']);
   $objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowcount, $row['silver']);
   $objPHPExcel->getActiveSheet()->SetCellValue('F'.$rowcount, $row['gold']);
-  $objPHPExcel->getActiveSheet()->SetCellValue('G'.$rowcount, $row['platinum']);
-  $objPHPExcel->getActiveSheet()->SetCellValue('H'.$rowcount, $row['power']);
+  $objPHPExcel->getActiveSheet()->SetCellValue('G'.$rowcount, $row['diamond']);
+  $objPHPExcel->getActiveSheet()->SetCellValue('H'.$rowcount, $row['platinum']);
   $objPHPExcel->getActiveSheet()->SetCellValue('I'.$rowcount, $row['price']);
   $rowcount++;
 }

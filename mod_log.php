@@ -8,6 +8,7 @@ session_start();
 if (!isset($_SESSION['user'])) {
 	header("location:index.php");
 }
+
 ?>
 <link rel="icon" type="image/png" sizes="192x192"  href="images/android-icon-192x192.png">
 <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
@@ -32,6 +33,7 @@ if (!isset($_SESSION['user'])) {
 <script src="lib/login.js"></script>
 
 <script src="lib/bootstrap-table.js"></script>
+
 </head>
 
 <body>
@@ -42,7 +44,7 @@ if (!isset($_SESSION['user'])) {
     class="table table-striped">
     <tbody>
 <?php
-$file = file("./log/Kolkata.txt");
+$file = file("./log/".$_SESSION['city'].".txt");
 $file = array_reverse($file);
 foreach($file as $f){
     echo "<tr><td>".$f."</td></tr>";
