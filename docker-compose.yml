@@ -1,0 +1,30 @@
+services:
+  lcndb:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=meghbela_lcn_db_kol
+      - MYSQL_USER=md_dbuser
+      - MYSQL_PASSWORD=m#gh@c@s
+      - MYSQL_ALLOW_EMPTY_PASSWORD=1
+    restart: unless-stopped
+  www:
+    build: .
+    depends_on:
+      - lcndb
+    volumes:
+      - "./:/var/www/html"
+    ports:
+      - "8080:80"
+      - "8043:443"
+    restart: unless-stopped
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    depends_on:
+      - lcndb
+    ports:
+      - "8081:80"
+    environment:
+      - PMA_HOST=lcndb
+      - PMA_PORT=3306
+    restart: unless-stopped

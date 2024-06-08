@@ -1829,3 +1829,27 @@
 2024-May-31::16:41:43  22013 name changed from'CARE WORLD 0/' to 'NKTV BANGLA 0/'
 2024-May-31::16:42:47  11615 LCN changed from'174' to '177'
 2024-May-31::16:43:00  22013 LCN changed from'364' to '174'
+2024-June-08::09:58:34  10311 name changed from'MOVIE OPERA 0/' to 'MOVIE OPE 0/'
+2024-June-08::15:29:21  10311 name changed from'MOVIE OPE 0/' to 'MOVIE OPE 0/'
+2024-June-08::15:29:27  10812 name changed from'STAR GOLD 19/' to ' GOLD 19/'
+2024-June-08::09:59:36  10311 LCN changed from'1' to '34'
+2024-June-08::10:00:10  10311 LCN changed from'34' to '1'
+2024-June-08::15:31:08  10311 LCN changed from'1' to '33'
+2024-June-08::15:32:09  10311 LCN changed from'33' to '1'
+2024-June-08::15:33:51  10311 lcn changed to 4
+2024-June-08::15:33:51  10803 lcn changed to 1
+2024-June-08::15:34:02  10803 lcn changed to 4
+2024-June-08::15:34:02  10311 lcn changed to 1
+2024-June-08::15:34:08  15124 deleted
+2024-June-08::15:45:03  22112 LCN changed from'10' to '38'
+2024-June-08::15:45:28  15006 lcn changed to 14
+2024-June-08::15:45:28  23908 lcn changed to 11
+2024-June-08::15:45:48  23802 deleted
+2024-June-08::15:46:24  10812 lcn changed to 6
+2024-June-08::15:46:24  22809 lcn changed to 2
+2024-June-08::15:46:30  10208 LCN changed from'8' to '34'
+2024-June-08::15:47:01  22103 deleted
+2024-June-08::15:50:14  10203 lcn changed to 1
+2024-June-08::15:50:14  10311 lcn changed to 3
+2024-June-08::15:50:18  11011 LCN changed from'7' to '8'
+2024-June-08::15:50:23  23808 deleted

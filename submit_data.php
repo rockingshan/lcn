@@ -1,5 +1,7 @@
 <?php
 session_start();
+date_default_timezone_set('Asia/Kolkata');
+
 if (!isset($_SESSION['user'])) {
 	header("location:index.php");	//redirect to index page if not logged in
 }
@@ -7,20 +9,21 @@ if (!isset($_SESSION['user'])) {
 require_once "include/connect.php";
 include 'include/log.php';
 mysqli_select_db($con,$_SESSION['select_db']) or die("No database");
-
-date_default_timezone_set('Asia/Kolkata');
-
 $ts_array=array();
 if (isset($_SESSION['sidcounter'])) {
 	$sid_un_array = array_unique($_SESSION['sidcounter']);
+	var_dump($sid_un_array);
 	foreach ($sid_un_array as $sid_value) {
 		$sid_sql = "SELECT ts from sid_tb WHERE sid=$sid_value";
 		$sid_result = mysqli_query($con, $sid_sql);
+		if (!$sid_result) {
+			trigger_error(mysqli_error($con), E_USER_ERROR);
+		}
 		$sid_res_row = mysqli_fetch_array($sid_result);
 		$ts_array[] = $sid_res_row['ts'];
 	}
 }
-
+var_dump($ts_array);
 $ts_un_array=array_unique($ts_array);
 sort($ts_un_array);
 ?>
@@ -60,8 +63,11 @@ sort($ts_un_array);
 foreach($ts_un_array as $ts_value){
 	$sidlcnout="";
 	$ts_sql="SELECT sid,freq FROM sid_tb WHERE ts=$ts_value";
+	echo $ts_sql;
 	$ts_result=mysqli_query($con,$ts_sql);
-
+/* 	if (!$ts_result) {
+		trigger_error(mysqli_error($con), E_USER_ERROR);
+	} */
 	while($ts_res_row=mysqli_fetch_array($ts_result)){
 		$sidlcn_sql="SELECT * from channel_tb,sid_tb WHERE channel_tb.sid='".$ts_res_row['sid']."' AND sid_tb.sid='".$ts_res_row['sid']."'";
 		$sidlcn_result=mysqli_query($con,$sidlcn_sql);
@@ -159,7 +165,7 @@ $sql = "SELECT * FROM channel_tb,lcn_tb WHERE channel_tb.lcn=lcn_tb.lcn ORDER BY
 
 $result = mysqli_query($con,$sql);
 if (!$result) { // add this check.
-    die('Invalid query: ' . mysqli_error());
+    die('Invalid query: ' . mysqli_error($auth));
 }
 $rowcount=2;
 while($row = mysqli_fetch_array($result)){

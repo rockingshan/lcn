@@ -13,7 +13,7 @@ mysqli_select_db($con,$_SESSION['select_db']) or die("No database");
 $blank_lcn_sql = "SELECT * from lcn_tb WHERE lcn_tb.lcn NOT IN (SELECT lcn FROM channel_tb)";
 $blank_lcn_result = mysqli_query($con, $blank_lcn_sql);
 if (!$blank_lcn_result) {// add this check.
-	die('Invalid query: ' . mysqli_error());
+	die('Invalid query: ' . mysqli_error($con));
 }
 if (isset($_GET['edit_flag'])) {
 	$new_name = $_GET['channel'];

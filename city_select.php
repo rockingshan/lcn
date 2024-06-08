@@ -1,6 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
 <?php
 session_start();
 
@@ -15,6 +12,10 @@ $res_submit=mysqli_query($auth,$sql_submit) or die(mysqli_error($con));
 //$res_data=mysqli_fetch_assoc($res_submit);
 
 ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
 <!-- Latest compiled and minified CSS of Bootstrap CSS-->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
@@ -35,8 +36,7 @@ $res_submit=mysqli_query($auth,$sql_submit) or die(mysqli_error($con));
     <select id="selectdb" name="selectdb" class="form-control">
     <?php
     while($row = mysqli_fetch_assoc($res_submit)){
-
-      echo "<option value=".$row[city_id].">".$row[city_name]."</option>";
+      echo "<option value=".$row['city_id'].">".$row['city_name']."</option>";
     
     } ?>
     </select>

@@ -1,9 +1,6 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-
-<head>
-  <?php
-  session_start();
+<?php
+session_start();
+date_default_timezone_set('Asia/Kolkata');
   //starting the connection to db
   include("include/connect.php");
   if (isset($_GET['par'])) {
@@ -29,9 +26,13 @@
 
   $result = mysqli_query($con, $sql);
   if (!$result) { // add this check.
-    die('Invalid query: ' . mysqli_error());
+    die('Invalid query: ' . mysqli_error($con));
   }
   ?>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
 
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <link rel="icon" type="image/png" sizes="192x192" href="images/android-icon-192x192.png">

@@ -19,7 +19,7 @@ $delete_sid=$_GET['sid'];
     if (!$er_res) {// add this check.
         die('Invalid query: ' . mysqli_error($con));
     }
-    $_SESSION['sidcounter'][]=$new_sid;
+    $_SESSION['sidcounter'][]=$delete_sid;
     write_log($delete_sid." deleted");
 header("location:secure_page.php");
 ?>
