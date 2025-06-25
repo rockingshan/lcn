@@ -1,7 +1,5 @@
 <?php
-session_start();
 date_default_timezone_set('Asia/Kolkata');
-
 function write_log ($data =''){
 
 $write_data = $data;

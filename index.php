@@ -1,6 +1,5 @@
 <?php
-session_start();
-date_default_timezone_set('Asia/Kolkata');
+  session_start();
   //starting the connection to db
   include("include/connect.php");
   if (isset($_GET['par'])) {
@@ -26,12 +25,12 @@ date_default_timezone_set('Asia/Kolkata');
 
   $result = mysqli_query($con, $sql);
   if (!$result) { // add this check.
-    die('Invalid query: ' . mysqli_error($con));
+    die('Invalid query: ' . mysqli_error());
   }
   ?>
-
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
 
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />

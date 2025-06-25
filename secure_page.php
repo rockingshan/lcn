@@ -32,14 +32,13 @@ $sql = "SELECT * FROM channel_tb,lcn_tb,sid_tb WHERE channel_tb.lcn=lcn_tb.lcn A
 
 $result = mysqli_query($con,$sql);
 if (!$result) { // add this check.
-    die('Invalid query: ' . mysqli_error($auth));
+    die('Invalid query: ' . mysqli_error());
 }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
 "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head><meta http-equiv="content-type" content="text/html; charset=utf-8" />
-
 <link rel="icon" type="image/png" sizes="192x192"  href="images/android-icon-192x192.png">
 <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="96x96" href="images/favicon-96x96.png">

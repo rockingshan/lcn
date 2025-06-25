@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jun 17, 2024 at 01:59 PM
+-- Generation Time: Jun 12, 2025 at 05:17 PM
 -- Server version: 5.7.11
 -- PHP Version: 5.6.18
 
@@ -19,8 +19,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `meghbela_lcn_db_kol`
 --
-CREATE DATABASE IF NOT EXISTS `meghbela_lcn_db_kol` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `meghbela_lcn_db_kol`;
 
 -- --------------------------------------------------------
 
@@ -29,17 +27,23 @@ USE `meghbela_lcn_db_kol`;
 --
 
 DROP TABLE IF EXISTS `auth_tb`;
-CREATE TABLE `auth_tb` (
-  `user_id` int(6) NOT NULL,
+CREATE TABLE IF NOT EXISTS `auth_tb` (
+  `user_id` int(6) NOT NULL AUTO_INCREMENT,
   `user` varchar(255) NOT NULL,
   `pass` varchar(50) NOT NULL,
   `first_name` varchar(255) NOT NULL,
   `last_name` varchar(255) DEFAULT NULL,
   `email` varchar(255) NOT NULL,
   `is_admin` tinyint(1) NOT NULL,
-  `is_active` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `is_active` tinyint(1) NOT NULL,
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
+--
+-- Truncate table before insert `auth_tb`
+--
+
+TRUNCATE TABLE `auth_tb`;
 --
 -- Dumping data for table `auth_tb`
 --
@@ -55,43 +59,51 @@ INSERT INTO `auth_tb` (`user_id`, `user`, `pass`, `first_name`, `last_name`, `em
 --
 
 DROP TABLE IF EXISTS `channel_tb`;
-CREATE TABLE `channel_tb` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `channel_tb` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `sid` int(8) NOT NULL,
   `channel` varchar(255) NOT NULL,
   `broadcaster` varchar(255) NOT NULL,
   `lcn` int(5) NOT NULL,
-  `lcnhex` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `lcnhex` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `sid` (`sid`),
+  UNIQUE KEY `id` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=468 DEFAULT CHARSET=latin1;
 
+--
+-- Truncate table before insert `channel_tb`
+--
+
+TRUNCATE TABLE `channel_tb`;
 --
 -- Dumping data for table `channel_tb`
 --
 
 INSERT INTO `channel_tb` (`id`, `sid`, `channel`, `broadcaster`, `lcn`, `lcnhex`) VALUES
-(1, 10311, 'MOVIE OPERA 0/', 'LOCAL', 1, '00 01'),
-(2, 10812, 'STAR GOLD 19/', 'STAR', 2, '00 02'),
-(3, 10203, 'ZEE CINEMA 19/', 'ZEE', 3, '00 03'),
-(4, 10803, 'SONY MAX 15/', 'SONY', 4, '00 04'),
-(5, 22812, 'SONY MAX2 Rs.1/', 'SONY', 5, '00 05'),
-(6, 22809, '& PICTURES 10/', 'ZEE', 6, '00 06'),
-(7, 11011, 'STAR GOLD2 Rs.2/', 'STAR', 7, '00 07'),
-(8, 10208, 'ZEE BOLLYWOOD 3/', 'ZEE', 8, '00 08'),
-(9, 11203, 'ZEE ANMOL CINEMA 0.10/', 'ZEE', 9, '00 09'),
-(10, 22112, 'COLORS CINEPLEX 3/', 'TV 18', 10, '00 0A'),
+(1, 10311, 'MOVIE OPERA â‚¹0/', 'LOCAL', 1, '00 01'),
+(2, 10812, 'STAR GOLD â‚¹19/', 'STAR', 2, '00 02'),
+(3, 10203, 'ZEE CINEMA â‚¹19/', 'ZEE', 3, '00 03'),
+(4, 10803, 'SONY MAX â‚¹15/', 'SONY', 4, '00 04'),
+(5, 22812, 'SONY MAX2 â‚¹1/', 'SONY', 8, '00 08'),
+(6, 22809, '& PICTURES 10/', 'ZEE', 9, '00 09'),
+(7, 11011, 'STAR GOLD2 â‚¹2/', 'STAR', 6, '00 06'),
+(8, 10208, 'ZEE BOLLYWOOD 3/', 'ZEE', 10, '00 0A'),
+(9, 11203, 'ZEE ANMOL CINEMA 0.10/', 'ZEE', 23, '00 17'),
+(10, 22112, 'COLORS CINEPLEX 3/', 'TV 18', 5, '00 05'),
 (11, 15006, 'SONY WAH 0.50/', 'SONY', 11, '00 0B'),
 (12, 10305, 'ZEE CLASSIC 0.10/', 'ZEE', 12, '00 0C'),
 (13, 10207, 'ZEE ACTION 0.10/', 'ZEE', 13, '00 0D'),
-(14, 23908, 'COLORS SUPERHITS 0.10/', 'TV 18', 14, '00 0E'),
-(15, 15124, 'CINEPLEX BOLLYWOOD 0.10/', 'TV 18', 15, '00 0F'),
-(16, 11409, 'STAR UTSAV MOVIES 0.50/', 'STAR', 16, '00 10'),
+(14, 23908, 'COLORS SUPERHITS 0/', 'TV 18', 14, '00 0E'),
+(15, 15124, 'CINEPLEX BOLLYWOOD 0/', 'TV 18', 15, '00 0F'),
+(16, 11409, 'STAR UTSAV MOVIES 0/', 'STAR', 16, '00 10'),
 (17, 11808, 'STAR GOLD THRILLS 2/', 'STAR', 17, '00 11'),
 (18, 11806, 'STAR GOLD ROMANCE 2/', 'STAR', 18, '00 12'),
 (19, 11009, 'STAR GOLD SELECT 7/', 'STAR', 19, '00 13'),
 (20, 22103, 'SKYWAVE DIGITAL 0/', 'LOCAL', 20, '00 14'),
 (21, 10304, 'MOVIE OPERA CLASSIC 0/', 'LOCAL', 21, '00 15'),
-(22, 15101, 'ALL TIME MOVIES 0/', 'FTA', 22, '00 16'),
-(23, 15106, 'BFLIX 0/', 'FTA', 23, '00 17'),
+(22, 15101, 'ALL TIME MOVIES 0/', 'FTA', 33, '00 21'),
+(23, 15106, 'TEST 0/', 'FTA', 659, '02 93'),
 (24, 15008, 'SAMPARK TV 0/', 'LOCAL', 24, '00 18'),
 (25, 10306, 'DANGAL2 Rs.0/', 'FTA', 25, '00 19'),
 (26, 11014, 'B4U MOVIES 0/', 'FTA', 26, '00 1A'),
@@ -116,7 +128,7 @@ INSERT INTO `channel_tb` (`id`, `sid`, `channel`, `broadcaster`, `lcn`, `lcnhex`
 (45, 22111, 'ZOOM 0/', 'BENNET COLEMAN', 53, '00 35'),
 (46, 11412, 'ISHARA TV 5/', 'IN 10 MEDIA', 54, '00 36'),
 (47, 11206, 'STAR UTSAV 0.50/', 'STAR', 55, '00 37'),
-(48, 11015, 'BINDAS 0.10/', 'STAR', 56, '00 38'),
+(48, 11015, 'DISCONTINUED', 'STAR', 56, '00 38'),
 (49, 22407, 'NAZARA 0.15/', 'IN 10 MEDIA', 57, '00 39'),
 (50, 22312, 'DD RAJASHTHAN 0/', 'DD', 58, '00 3A'),
 (51, 11109, 'DANGAL TV 0/', 'FTA', 59, '00 3B'),
@@ -150,14 +162,14 @@ INSERT INTO `channel_tb` (`id`, `sid`, `channel`, `broadcaster`, `lcn`, `lcnhex`
 (79, 10909, 'SRISTI PLUS 0/', 'FTA', 103, '00 67'),
 (80, 10101, 'MOVIE OPERA MUSIC 0/', 'LOCAL', 104, '00 68'),
 (81, 22106, 'S MUSIC 0/', 'LOCAL', 105, '00 69'),
-(82, 11111, 'PURNIMA TV 0/', 'FTA', 110, '00 6E'),
+(82, 11111, 'GLOBE TV 0/', 'FTA', 110, '00 6E'),
 (83, 11216, 'JALSHA MOVIES 15/', 'STAR', 121, '00 79'),
 (84, 10201, 'ZEE BANGLA CINEMA 10/', 'ZEE', 122, '00 7A'),
 (85, 11212, 'COLORS BANGLA CINEMA 1/', 'TV 18', 123, '00 7B'),
 (86, 22105, 'SW BANGLA CINEMA 0/', 'LOCAL', 124, '00 7C'),
 (87, 22605, 'KHUSHBOO BANGLA 0/', 'FTA', 125, '00 7D'),
 (88, 22909, 'SAMPARK BANGLA 0/', 'LOCAL', 126, '00 7E'),
-(89, 11001, 'AAMAR CINEMA 0/', 'FTA', 127, '00 7F'),
+(89, 11001, 'SITI CINEMA 0/', 'FTA', 127, '00 7F'),
 (90, 10813, 'STAR SPORTS 1 Rs.19/', 'STAR', 136, '00 88'),
 (91, 15105, 'STAR SPORTS 2 Rs.4/', 'STAR', 137, '00 89'),
 (92, 10712, 'STAR SPORTS 3 Rs.2/', 'STAR', 138, '00 8A'),
@@ -169,8 +181,8 @@ INSERT INTO `channel_tb` (`id`, `sid`, `channel`, `broadcaster`, `lcn`, `lcnhex`
 (98, 22516, 'EUROSPORT  3.5/', 'DISCOVERY', 144, '00 90'),
 (99, 11411, 'STAR SPORTS SELECT 1 Rs. 19/', 'STAR', 145, '00 91'),
 (100, 11010, 'STAR SPORTS SELECT2 Rs.7/', 'STAR', 146, '00 92'),
-(101, 11805, 'STAR SPORTS FIRST 0.5/', 'STAR', 147, '00 93'),
-(102, 24004, 'SPORTS 18 1 Rs.8/', 'STAR', 148, '00 94'),
+(101, 11805, 'STAR SPORTS 2 KANADA', 'STAR', 147, '00 93'),
+(102, 24004, 'STAR SPORTS 2 HINDI', 'STAR', 148, '00 94'),
 (103, 22404, 'STAR SPORTS 1 TELUGU 19/', 'STAR', 149, '00 95'),
 (104, 11305, 'TEST CH 4/', 'PLEX', 986, '03 DA'),
 (105, 11007, 'DD SPORTS 0/', 'DD', 156, '00 9C'),
@@ -182,7 +194,7 @@ INSERT INTO `channel_tb` (`id`, `sid`, `channel`, `broadcaster`, `lcn`, `lcnhex`
 (111, 10905, 'CN NEWS 0/', 'FTA', 170, '00 AA'),
 (112, 10906, 'R PLUS 0/', 'FTA', 171, '00 AB'),
 (113, 22702, 'EKHON KOLKATA 0/', 'FTA', 172, '00 AC'),
-(114, 22902, 'ONKAR ONLY 0/', 'FTA', 173, '00 AD'),
+(114, 22902, 'BANGLA BHAKTI 0/', 'FTA', 413, '01 9D'),
 (115, 11615, 'TARA NEWS 0/', 'FTA', 177, '00 B1'),
 (116, 10907, 'NEWS TIME 0/', 'FTA', 175, '00 AF'),
 (117, 12709, 'TRIBE TV 0/', 'FTA', 178, '00 B2'),
@@ -209,7 +221,7 @@ INSERT INTO `channel_tb` (`id`, `sid`, `channel`, `broadcaster`, `lcn`, `lcnhex`
 (138, 10205, 'ZEE BUSINESS 0.10/', 'ZEE', 247, '00 F7'),
 (139, 11607, 'ET NOW SWADESH 1/', 'BENNET COLEMAN', 248, '00 F8'),
 (140, 11509, 'NDTV PROFIT 1/', 'NDTV', 249, '00 F9'),
-(141, 11505, 'NEWS 18 INDIA 0.10/', 'TV 18', 262, '01 06'),
+(141, 11505, 'NEWS 18 INDIA 0.10/', 'TV 18', 280, '01 18'),
 (142, 22604, 'TIMES NOW NAVBHARAT 0/', 'BENNET COLEMAN', 263, '01 07'),
 (143, 11608, 'ZEE NEWS 0.10/', 'ZEE', 270, '01 0E'),
 (144, 11106, 'REPUBLIC BHARAT 0/', 'FTA', 264, '01 08'),
@@ -222,7 +234,7 @@ INSERT INTO `channel_tb` (`id`, `sid`, `channel`, `broadcaster`, `lcn`, `lcnhex`
 (151, 11101, 'GNT 0.25/', 'TV TODAY', 269, '01 0D'),
 (152, 11407, 'NEWS 18 LOKMAT 0.10/', 'TV 18', 278, '01 16'),
 (153, 24008, 'ZEE UP UK 0.10/', 'ZEE', 272, '01 10'),
-(154, 11006, 'DD NEWS 0/', 'DD', 280, '01 18'),
+(154, 11006, 'DD NEWS 0/', 'DD', 262, '01 06'),
 (155, 11510, 'NDTV INDIA 1/', 'NDTV', 268, '01 0C'),
 (156, 10913, 'ZEE BIHAR JHARKHAND 0.10/', 'ZEE', 273, '01 11'),
 (157, 11809, 'ZEE DELHI NCR 0.10/', 'ZEE', 274, '01 12'),
@@ -237,10 +249,10 @@ INSERT INTO `channel_tb` (`id`, `sid`, `channel`, `broadcaster`, `lcn`, `lcnhex`
 (166, 15115, 'ZEE MP CHATTISGARH 0.10/', 'ZEE', 275, '01 13'),
 (167, 11016, 'TAAZA TV 0/', 'FTA', 288, '01 20'),
 (168, 10209, 'ZEE CAFE 10/', 'ZEE', 297, '01 29'),
-(169, 11807, 'COMEDY CENTRAL 5/', 'TV 18', 299, '01 2B'),
+(169, 11807, 'STAR SPORTS KHEL 1/-', 'TV 18', 152, '00 98'),
 (170, 10707, 'COLORS INFINITY 5/', 'TV 18', 300, '01 2C'),
 (171, 22801, 'ROMEDY NOW 5/', 'BENNET COLEMAN', 301, '01 2D'),
-(172, 22507, 'WOMAN 3/', 'TRAVEL XP', 302, '01 2E'),
+(172, 22507, 'SONY MAX 1 5/', 'TRAVEL XP', 7, '00 07'),
 (173, 15207, 'TV5 0/', 'FTA', 303, '01 2F'),
 (174, 22501, 'GOD TV ASIA 0/', 'FTA', 307, '01 33'),
 (175, 22706, 'FRANCE 24 Rs.0/', 'FTA', 312, '01 38'),
@@ -268,9 +280,9 @@ INSERT INTO `channel_tb` (`id`, `sid`, `channel`, `broadcaster`, `lcn`, `lcnhex`
 (197, 12702, 'GYAN DARSHAN 0/', 'DD', 366, '01 6E'),
 (198, 11814, 'SHUBHASANDESH 0/', 'FTA', 369, '01 71'),
 (199, 12706, 'INDIA TV SN HD 0/', 'DD', 801, '03 21'),
-(200, 12707, 'MHRD 28 SHARDA NIOS 0/', 'DD', 371, '01 73'),
-(201, 12708, 'MHRD 31 Kishore Manch NCERT 0/', 'DD', 372, '01 74'),
-(202, 11513, 'FOX LIFE 1/', 'STAR', 381, '01 7D'),
+(200, 12707, 'SITI NEWS 0/', 'DD', 176, '00 B0'),
+(201, 12708, 'SITI MUSIC 0/', 'DD', 466, '01 D2'),
+(202, 11513, 'STAR SPORTS 2 TAMIL HD', 'STAR', 767, '02 FF'),
 (203, 10902, 'TLC 2/', 'DISCOVERY', 382, '01 7E'),
 (204, 11312, 'DISCOVERY TURBO 1/', 'DISCOVERY', 383, '01 7F'),
 (205, 11511, 'NDTV GOOD TIMES 1.50/', 'NDTV', 384, '01 80'),
@@ -284,7 +296,7 @@ INSERT INTO `channel_tb` (`id`, `sid`, `channel`, `broadcaster`, `lcn`, `lcnhex`
 (213, 11013, 'AASTHA BHAJAN 0/', 'FTA', 410, '01 9A'),
 (214, 12701, 'HARE KRSNA 0/', 'FTA', 411, '01 9B'),
 (215, 22010, 'BHAKTI 0/', 'FTA', 412, '01 9C'),
-(216, 22914, 'BANGLA BHAKTI 0/', 'FTA', 413, '01 9D'),
+(216, 22914, 'SITI TOLLYWOOD 0/', 'FTA', 133, '00 85'),
 (217, 11613, 'BHAKTI SAGAR 0/', 'FTA', 414, '01 9E'),
 (218, 22514, 'DIVYA 0/', 'FTA', 416, '01 A0'),
 (219, 22210, 'SATSANG 0/', 'FTA', 417, '01 A1'),
@@ -315,7 +327,7 @@ INSERT INTO `channel_tb` (`id`, `sid`, `channel`, `broadcaster`, `lcn`, `lcnhex`
 (244, 11817, 'BALYA BHARAT 4/', 'ETV', 448, '01 C0'),
 (245, 11307, 'GUBBARE 3/', 'IN 10 MEDIA', 450, '01 C2'),
 (246, 11413, 'MTV 3/', 'TV 18', 462, '01 CE'),
-(247, 11815, 'MTV BEATS 0.10/', 'TV 18', 463, '01 CF'),
+(247, 11815, 'DISCONTINUED', 'TV 18', 463, '01 CF'),
 (248, 11610, 'ZING 0.10/', 'ZEE', 464, '01 D0'),
 (249, 11112, '9XM 0/', 'FTA', 465, '01 D1'),
 (250, 11901, '9X JALWA 0/', 'FTA', 467, '01 D3'),
@@ -324,7 +336,7 @@ INSERT INTO `channel_tb` (`id`, `sid`, `channel`, `broadcaster`, `lcn`, `lcnhex`
 (253, 10307, 'B4U MUSIC 0/', 'FTA', 472, '01 D8'),
 (254, 10911, 'MASTII 0/', 'FTA', 473, '01 D9'),
 (255, 22611, 'MANORANJAN MOVIES 0/', 'FTA', 476, '01 DC'),
-(256, 11501, 'VH1 Rs.1/', 'TV 18', 497, '01 F1'),
+(256, 11501, 'DISCONTINUED', 'TV 18', 497, '01 F1'),
 (257, 22313, 'INSYNC 0/', 'FTA', 499, '01 F3'),
 (258, 22813, 'ASIANET MOVIES 19/', 'STAR', 502, '01 F6'),
 (259, 11208, 'ASIANET 19/', 'STAR', 505, '01 F9'),
@@ -363,7 +375,7 @@ INSERT INTO `channel_tb` (`id`, `sid`, `channel`, `broadcaster`, `lcn`, `lcnhex`
 (292, 11116, 'SIDHARTH GOLD  3.46/', 'SIDHARTH TV', 573, '02 3D'),
 (293, 11709, 'TARANG 14/', 'TARANG BROADCASTER', 576, '02 40'),
 (294, 11117, 'ZEE SARTHAK 19/', 'ZEE', 577, '02 41'),
-(295, 11408, 'COLORS ORIYA 6/', 'TV 18', 578, '02 42'),
+(295, 11408, 'DISCONTINUED', 'TV 18', 578, '02 42'),
 (296, 23601, 'SIDHARTH TV 14/', 'SIDHARTH TV', 579, '02 43'),
 (297, 22612, 'STAR KIRANO 12/', 'STAR', 580, '02 44'),
 (298, 22511, 'DD ORIYA 0/', 'DD', 581, '02 45'),
@@ -424,7 +436,7 @@ INSERT INTO `channel_tb` (`id`, `sid`, `channel`, `broadcaster`, `lcn`, `lcnhex`
 (353, 23803, 'DY 365 Rs.0/', 'FTA', 651, '02 8B'),
 (354, 23906, 'PRATIDIN 0/', 'FTA', 653, '02 8D'),
 (355, 12703, 'ARUN PRABHA 0/', 'DD', 654, '02 8E'),
-(356, 11708, 'ZEE GANGA 0.50/', 'ZEE', 659, '02 93'),
+(356, 11708, 'ZEE ANMOL CINEMA 2 0.50/', 'ZEE', 22, '00 16'),
 (357, 22601, 'ZEE BISKOPE 0.10/', 'ZEE', 660, '02 94'),
 (358, 11904, 'SANGEET BHOJPURI 0/', 'FTA', 661, '02 95'),
 (359, 10908, 'OSCAR MOVIES 0/', 'FTA', 663, '02 97'),
@@ -444,7 +456,7 @@ INSERT INTO `channel_tb` (`id`, `sid`, `channel`, `broadcaster`, `lcn`, `lcnhex`
 (373, 23722, 'STAR GOLD SELECT HD 8/', 'STAR', 698, '02 BA'),
 (374, 23203, '& XPLOR HD 4/', 'ZEE', 699, '02 BB'),
 (375, 23101, 'STAR GOLD 2 HD 4/', 'STAR', 700, '02 BC'),
-(376, 23104, 'STAR PLUS HD 19/', 'STAR', 714, '02 CA'),
+(376, 23104, 'STAR PLUS HD 22/-', 'STAR', 714, '02 CA'),
 (377, 23626, 'SET HD 19/', 'SONY', 715, '02 CB'),
 (378, 23405, 'ZEE TV HD 19/', 'ZEE', 716, '02 CC'),
 (379, 23304, 'COLORS HD 19/', 'TV 18', 717, '02 CD'),
@@ -466,15 +478,15 @@ INSERT INTO `channel_tb` (`id`, `sid`, `channel`, `broadcaster`, `lcn`, `lcnhex`
 (395, 26001, 'EUROSPORT HD 5.5/', 'DISCOVERY', 763, '02 FB'),
 (396, 15111, 'STAR SPORTS SELECT 1 HD 19/', 'STAR', 764, '02 FC'),
 (397, 15112, 'STAR SPORTS SELECT 2 HD 10/', 'STAR', 765, '02 FD'),
-(398, 23005, 'SPORTS 18 1 HD 10/', 'TV 18', 766, '02 FE'),
+(398, 23005, 'STAR SPORTS 2 HINDI HD', 'TV 18', 766, '02 FE'),
 (399, 23406, 'TIMES NOW WORLD HD 3/', 'BENNET COLEMAN', 779, '03 0B'),
 (400, 23208, 'CNBC TV18 HD 1/', 'TV 18', 780, '03 0C'),
 (401, 15904, 'AAJ TAK HD 2/', 'TV TODAY', 799, '03 1F'),
 (402, 22401, 'T N NAVBHARAT HD 1.50/', 'BENNET COLEMAN', 800, '03 20'),
-(403, 23713, 'VH1 HD 2/', 'TV 18', 809, '03 29'),
+(403, 23713, 'DISCONTINUED', 'TV 18', 809, '03 29'),
 (404, 23625, 'ZEE CAFE HD 10/', 'ZEE', 811, '03 2B'),
 (405, 23622, 'DISNEY INTERNATIONAL HD 14/', 'STAR', 812, '03 2C'),
-(406, 22614, 'COMEDY CENTRAL HD 9/', 'TV 18', 813, '03 2D'),
+(406, 22614, 'DISCONTINUED', 'TV 18', 813, '03 2D'),
 (407, 23402, 'COLORS INFINITY HD 9/', 'TV 18', 816, '03 30'),
 (408, 23007, '& PRIVE HD 6/', 'ZEE', 824, '03 38'),
 (409, 23505, '& FLIX HD 19/', 'ZEE', 822, '03 36'),
@@ -491,7 +503,7 @@ INSERT INTO `channel_tb` (`id`, `sid`, `channel`, `broadcaster`, `lcn`, `lcnhex`
 (420, 23611, 'NG WILD HD 8/', 'STAR', 844, '03 4C'),
 (421, 23710, 'ANIMAL PLANET HD 5/', 'DISCOVERY', 845, '03 4D'),
 (422, 23307, 'TLC HD WORLD 3/', 'DISCOVERY', 854, '03 56'),
-(423, 23004, 'FOX LIFE HD 2/', 'STAR', 855, '03 57'),
+(423, 23004, 'STAR SPORTS 2 TELEGU HD', 'STAR', 768, '03 00'),
 (424, 23624, 'TRAVEL XP HD 9/', 'TRAVEL XP', 856, '03 58'),
 (425, 26003, 'ZEE ZEST HD 10/', 'ZEE', 857, '03 59'),
 (426, 23621, 'SUN BANGLA HD 0/', 'ZEE', 737, '02 E1'),
@@ -508,19 +520,19 @@ INSERT INTO `channel_tb` (`id`, `sid`, `channel`, `broadcaster`, `lcn`, `lcnhex`
 (437, 15801, 'ZEE MARATHI HD 19/', 'ZEE', 908, '03 8C'),
 (438, 23711, 'MAA MOVIES HD 19/', 'STAR', 911, '03 8F'),
 (439, 15802, 'MAA TV HD 21/', 'STAR', 912, '03 90'),
-(440, 15803, 'GEMINI TV HD 19/', 'SUN', 913, '03 91'),
-(441, 25101, 'STAR KIRANO HD 15/', 'STAR', 921, '03 99'),
+(440, 15803, 'GEMINI TV HD 19/', 'SUN', 916, '03 94'),
+(441, 25101, 'DISCONTINEUED', 'STAR', 921, '03 99'),
 (442, 15116, 'TEST SD1', 'NONE', 922, '03 9A'),
 (443, 15117, 'TEST SD2', 'NONE', 924, '03 9C'),
 (444, 15118, 'TEST SD4', 'NONE', 926, '03 9E'),
-(445, 23006, 'ZEE CINEMALU HD 19/', 'NONE', 916, '03 94'),
+(445, 23006, 'ZEE CINEMALU HD 19/', 'NONE', 913, '03 91'),
 (446, 15121, 'TEST SD6', 'NONE', 929, '03 A1'),
 (447, 22306, 'ZEE PICCHAR 10/', 'NONE', 548, '02 24'),
 (448, 15804, 'ZEE TAMIL HD 19/', 'NONE', 901, '03 85'),
 (449, 22408, 'ZEE THIRAI 10', 'NONE', 519, '02 07'),
 (450, 25000, 'ZEE KERALAM 10/', 'NONE', 507, '01 FB'),
-(451, 25001, 'SPORTS 18 2', 'NONE', 150, '00 96'),
-(452, 25002, 'SPORTS 18 3', 'NONE', 151, '00 97'),
+(451, 25001, 'STAR SPORTS 2 TELUGU', 'NONE', 150, '00 96'),
+(452, 25002, 'STAR SPORTS 2 TAMIL', 'NONE', 151, '00 97'),
 (453, 11906, 'ZEE YUVA 1/', 'NONE', 601, '02 59'),
 (454, 15204, 'TEST HD4', 'NONE', 981, '03 D5'),
 (455, 15202, 'TEST HD3', 'NONE', 982, '03 D6'),
@@ -544,12 +556,19 @@ INSERT INTO `channel_tb` (`id`, `sid`, `channel`, `broadcaster`, `lcn`, `lcnhex`
 --
 
 DROP TABLE IF EXISTS `city_tb`;
-CREATE TABLE `city_tb` (
-  `city_id` int(3) NOT NULL,
+CREATE TABLE IF NOT EXISTS `city_tb` (
+  `city_id` int(3) NOT NULL AUTO_INCREMENT,
   `city_name` varchar(255) NOT NULL,
-  `db_name` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `db_name` varchar(255) NOT NULL,
+  PRIMARY KEY (`city_id`),
+  UNIQUE KEY `db_name` (`db_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
+--
+-- Truncate table before insert `city_tb`
+--
+
+TRUNCATE TABLE `city_tb`;
 --
 -- Dumping data for table `city_tb`
 --
@@ -567,12 +586,18 @@ INSERT INTO `city_tb` (`city_id`, `city_name`, `db_name`) VALUES
 --
 
 DROP TABLE IF EXISTS `lcn_tb`;
-CREATE TABLE `lcn_tb` (
+CREATE TABLE IF NOT EXISTS `lcn_tb` (
   `lcn` int(5) NOT NULL,
   `genre` varchar(255) NOT NULL,
-  `lcnhex` varchar(255) NOT NULL
+  `lcnhex` varchar(255) NOT NULL,
+  PRIMARY KEY (`lcn`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Truncate table before insert `lcn_tb`
+--
+
+TRUNCATE TABLE `lcn_tb`;
 --
 -- Dumping data for table `lcn_tb`
 --
@@ -1398,9 +1423,9 @@ INSERT INTO `lcn_tb` (`lcn`, `genre`, `lcnhex`) VALUES
 (818, 'HD ENGLISH GEC', '03 32'),
 (819, 'HD ENGLISH GEC', '03 33'),
 (820, 'HD ENGLISH GEC', '03 34'),
-(821, 'HD ENGLISH GEC', '03 35'),
-(822, 'HD ENGLISH GEC', '03 36'),
-(823, 'HD ENGLISH GEC', '03 37'),
+(821, 'HD ENGLISH MOVIES', '03 35'),
+(822, 'HD ENGLISH MOVIES', '03 36'),
+(823, 'HD ENGLISH MOVIES', '03 37'),
 (824, 'HD ENGLISH MOVIES', '03 38'),
 (825, 'HD ENGLISH MOVIES', '03 39'),
 (826, 'HD ENGLISH MOVIES', '03 3A'),
@@ -1595,7 +1620,7 @@ INSERT INTO `lcn_tb` (`lcn`, `genre`, `lcnhex`) VALUES
 --
 
 DROP TABLE IF EXISTS `package_tb`;
-CREATE TABLE `package_tb` (
+CREATE TABLE IF NOT EXISTS `package_tb` (
   `sid` mediumint(6) NOT NULL,
   `205` enum('YES','') NOT NULL,
   `230` enum('YES','') NOT NULL,
@@ -1605,6 +1630,11 @@ CREATE TABLE `package_tb` (
   `price` varchar(6) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Truncate table before insert `package_tb`
+--
+
+TRUNCATE TABLE `package_tb`;
 --
 -- Dumping data for table `package_tb`
 --
@@ -2085,13 +2115,19 @@ INSERT INTO `package_tb` (`sid`, `205`, `230`, `295`, `330`, `350`, `price`) VAL
 --
 
 DROP TABLE IF EXISTS `sid_tb`;
-CREATE TABLE `sid_tb` (
+CREATE TABLE IF NOT EXISTS `sid_tb` (
   `sid` int(8) NOT NULL,
   `ts` int(5) NOT NULL,
   `freq` mediumint(9) NOT NULL,
-  `sidhex` varchar(255) NOT NULL
+  `sidhex` varchar(255) NOT NULL,
+  PRIMARY KEY (`sid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Truncate table before insert `sid_tb`
+--
+
+TRUNCATE TABLE `sid_tb`;
 --
 -- Dumping data for table `sid_tb`
 --
@@ -2572,11 +2608,17 @@ INSERT INTO `sid_tb` (`sid`, `ts`, `freq`, `sidhex`) VALUES
 --
 
 DROP TABLE IF EXISTS `user_privilege_tb`;
-CREATE TABLE `user_privilege_tb` (
+CREATE TABLE IF NOT EXISTS `user_privilege_tb` (
   `user_id` int(6) NOT NULL,
-  `city_id` int(3) NOT NULL
+  `city_id` int(3) NOT NULL,
+  PRIMARY KEY (`user_id`,`city_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Truncate table before insert `user_privilege_tb`
+--
+
+TRUNCATE TABLE `user_privilege_tb`;
 --
 -- Dumping data for table `user_privilege_tb`
 --
@@ -2588,68 +2630,6 @@ INSERT INTO `user_privilege_tb` (`user_id`, `city_id`) VALUES
 (1, 4),
 (2, 1);
 
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `auth_tb`
---
-ALTER TABLE `auth_tb`
-  ADD PRIMARY KEY (`user_id`);
-
---
--- Indexes for table `channel_tb`
---
-ALTER TABLE `channel_tb`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `sid` (`sid`),
-  ADD UNIQUE KEY `id` (`id`);
-
---
--- Indexes for table `city_tb`
---
-ALTER TABLE `city_tb`
-  ADD PRIMARY KEY (`city_id`),
-  ADD UNIQUE KEY `db_name` (`db_name`);
-
---
--- Indexes for table `lcn_tb`
---
-ALTER TABLE `lcn_tb`
-  ADD PRIMARY KEY (`lcn`);
-
---
--- Indexes for table `sid_tb`
---
-ALTER TABLE `sid_tb`
-  ADD PRIMARY KEY (`sid`);
-
---
--- Indexes for table `user_privilege_tb`
---
-ALTER TABLE `user_privilege_tb`
-  ADD PRIMARY KEY (`user_id`,`city_id`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `auth_tb`
---
-ALTER TABLE `auth_tb`
-  MODIFY `user_id` int(6) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `channel_tb`
---
-ALTER TABLE `channel_tb`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `city_tb`
---
-ALTER TABLE `city_tb`
-  MODIFY `city_id` int(3) NOT NULL AUTO_INCREMENT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

@@ -1,7 +1,5 @@
 <?php
 session_start();
-date_default_timezone_set('Asia/Kolkata');
-
 if (!isset($_SESSION['user'])) {
 	header("location:index.php");	//redirect to index page if not logged in
 }

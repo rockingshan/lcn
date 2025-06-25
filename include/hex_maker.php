@@ -1,4 +1,5 @@
 <?php
+
 function hex_convert($dec_in=''){
 $var_hex=dechex($dec_in);
 $j=strlen($var_hex);
@@ -10,3 +11,11 @@ $var_hex_proper=strtoupper($var_hex_proper);
 return $var_hex_proper;
 }
 ?>
+
+
+
+
+
+
+
+

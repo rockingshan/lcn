@@ -1829,27 +1829,84 @@
 2024-May-31::16:41:43  22013 name changed from'CARE WORLD 0/' to 'NKTV BANGLA 0/'
 2024-May-31::16:42:47  11615 LCN changed from'174' to '177'
 2024-May-31::16:43:00  22013 LCN changed from'364' to '174'
-2024-June-08::09:58:34  10311 name changed from'MOVIE OPERA 0/' to 'MOVIE OPE 0/'
-2024-June-08::15:29:21  10311 name changed from'MOVIE OPE 0/' to 'MOVIE OPE 0/'
-2024-June-08::15:29:27  10812 name changed from'STAR GOLD 19/' to ' GOLD 19/'
-2024-June-08::09:59:36  10311 LCN changed from'1' to '34'
-2024-June-08::10:00:10  10311 LCN changed from'34' to '1'
-2024-June-08::15:31:08  10311 LCN changed from'1' to '33'
-2024-June-08::15:32:09  10311 LCN changed from'33' to '1'
-2024-June-08::15:33:51  10311 lcn changed to 4
-2024-June-08::15:33:51  10803 lcn changed to 1
-2024-June-08::15:34:02  10803 lcn changed to 4
-2024-June-08::15:34:02  10311 lcn changed to 1
-2024-June-08::15:34:08  15124 deleted
-2024-June-08::15:45:03  22112 LCN changed from'10' to '38'
-2024-June-08::15:45:28  15006 lcn changed to 14
-2024-June-08::15:45:28  23908 lcn changed to 11
-2024-June-08::15:45:48  23802 deleted
-2024-June-08::15:46:24  10812 lcn changed to 6
-2024-June-08::15:46:24  22809 lcn changed to 2
-2024-June-08::15:46:30  10208 LCN changed from'8' to '34'
-2024-June-08::15:47:01  22103 deleted
-2024-June-08::15:50:14  10203 lcn changed to 1
-2024-June-08::15:50:14  10311 lcn changed to 3
-2024-June-08::15:50:18  11011 LCN changed from'7' to '8'
-2024-June-08::15:50:23  23808 deleted
+2024-June-27::20:06:12  15101 lcn changed to 23
+2024-June-27::20:06:12  15106 lcn changed to 22
+2024-June-27::20:06:40  11708 lcn changed to 22
+2024-June-27::20:06:40  15106 lcn changed to 659
+2024-June-27::20:06:57  11708 name changed from'ZEE GANGA 0.50/' to 'ZEE ANMOL CINEMA 2 0.50/'
+2024-June-27::20:07:32  15106 name changed from'BFLIX 0/' to 'TEST 0/'
+2024-July-10::16:08:01  12707 name changed from'MHRD 28 SHARDA NIOS 0/' to 'SITI NEWS 0/'
+2024-July-10::16:08:17  12707 LCN changed from'371' to '176'
+2024-July-10::16:58:23  11001 name changed from'AAMAR CINEMA 0/' to 'SITI CINEMA 0/'
+2024-July-10::17:40:53  12708 name changed from'MHRD 31 Kishore Manch NCERT 0/' to 'S MUSIC 0/'
+2024-July-10::17:51:04  12708 LCN changed from'372' to '466'
+2024-July-10::17:56:00  12708 name changed from'S MUSIC 0/' to 'SITI MUSIC 0/'
+2024-November-06::19:35:00  22914 name changed from'BANGLA BHAKTI 0/' to 'SITI TOLLYWOOD 0/'
+2024-November-06::19:35:21  22914 LCN changed from'413' to '133'
+2024-November-06::19:35:57  22902 LCN changed from'173' to '413'
+2024-November-06::19:36:23  22902 name changed from'ONKAR ONLY 0/' to 'BANGLA BHAKTI 0/'
+2024-November-06::19:37:42  23104 name changed from'STAR PLUS HD 19/' to 'STAR PLUS HD 22/-'
+2024-November-06::19:38:17  10812 name changed from'STAR GOLD 19/' to 'STAR GOLD ₹19/'
+2024-November-06::19:38:28  10203 name changed from'ZEE CINEMA 19/' to 'ZEE CINEMA ₹19/'
+2024-November-06::19:38:42  10311 name changed from'MOVIE OPERA 0/' to 'MOVIE OPERA ₹0/'
+2024-November-06::19:38:50  22812 name changed from'SONY MAX2 Rs.1/' to 'SONY MAX2 Rs.₹1/'
+2024-November-06::19:39:03  10803 name changed from'SONY MAX 15/' to 'SONY MAX ₹15/'
+2024-November-06::19:39:57  22812 name changed from'SONY MAX2 Rs.₹1/' to 'SONY MAX2 ₹1/'
+2024-November-06::19:40:10  11011 name changed from'STAR GOLD2 Rs.2/' to 'STAR GOLD2 ₹2/'
+2025-April-19::19:39:53  11015 name changed from'BINDAS 0.10/' to 'DISCONTINUED'
+2025-April-19::19:40:13  11815 name changed from'MTV BEATS 0.10/' to 'DISCONTINUED'
+2025-April-19::19:40:26  11501 name changed from'VH1 Rs.1/' to 'DISCONTINUED'
+2025-April-19::19:40:41  11408 name changed from'COLORS ORIYA 6/' to 'DISCONTINUED'
+2025-April-19::19:41:02  23713 name changed from'VH1 HD 2/' to 'DISCONTINUED'
+2025-April-19::19:41:18  22614 name changed from'COMEDY CENTRAL HD 9/' to 'DISCONTINUED'
+2025-April-19::19:41:50  24004 name changed from'SPORTS 18 1 Rs.8/' to 'STAR SPORTS 2 HINDI'
+2025-April-19::19:42:32  25001 name changed from'SPORTS 18 2' to 'STAR SPORTS 2 TELUGU'
+2025-April-19::19:42:58  25002 name changed from'SPORTS 18 3' to 'STAR SPORTS 2 TAMIL'
+2025-April-19::19:44:14  11805 name changed from'STAR SPORTS FIRST 0.5/' to 'STAR SPORTS 2 KANADA'
+2025-April-22::18:16:30  25101 name changed from'STAR KIRANO HD 15/' to 'DISCONTINEUED'
+2025-April-22::18:16:58  23908 name changed from'COLORS SUPERHITS 0.10/' to 'COLORS SUPERHITS 0/'
+2025-April-22::18:17:11  15124 name changed from'CINEPLEX BOLLYWOOD 0.10/' to 'CINEPLEX BOLLYWOOD 0/'
+2025-April-22::18:17:22  11409 name changed from'STAR UTSAV MOVIES 0.50/' to 'STAR UTSAV MOVIES 0/'
+2025-April-24::18:45:00  11807 name changed from'COMEDY CENTRAL 5/' to 'STAR SPORTS KHEL 1/-'
+2025-April-24::18:45:34  11807 LCN changed from'299' to '152'
+2025-April-25::16:56:36  23004 name changed from'FOX LIFE HD 2/' to 'STAR SPORTS 2 TELEGU HD'
+2025-April-25::16:56:50  11513 name changed from'FOX LIFE 1/' to 'STAR SPORTS 2 TAMIL HD'
+2025-April-25::16:59:40  23005 name changed from'SPORTS 18 1 HD 10/' to 'STAR SPORTS 2 HINDI HD'
+2025-April-25::17:01:37  11513 LCN changed from'381' to '767'
+2025-April-25::17:02:15  23004 LCN changed from'855' to '768'
+2025-May-13::17:45:30  22112 lcn changed to 5
+2025-May-13::17:45:30  22812 lcn changed to 10
+2025-May-13::17:46:04  22809 lcn changed to 7
+2025-May-13::17:46:04  11011 lcn changed to 6
+2025-May-13::17:46:35  22809 lcn changed to 10
+2025-May-13::17:46:35  22812 lcn changed to 7
+2025-May-13::17:46:54  10208 lcn changed to 7
+2025-May-13::17:46:54  22812 lcn changed to 8
+2025-May-13::17:50:48  22507 name changed from'WOMAN 3/' to 'SONY MAX 1 5/'
+2025-May-13::17:51:55  22507 lcn changed to 7
+2025-May-13::17:51:55  10208 lcn changed to 302
+2025-May-13::17:52:19  11203 lcn changed to 10
+2025-May-13::17:52:19  22809 lcn changed to 9
+2025-May-13::17:52:47  10208 lcn changed to 10
+2025-May-13::17:52:47  11203 lcn changed to 302
+2025-May-13::17:52:47  10208 lcn changed to 302
+2025-May-13::17:52:47  11203 lcn changed to 10
+2025-May-13::17:53:26  10208 lcn changed to 10
+2025-May-13::17:53:26  11203 lcn changed to 302
+2025-May-13::17:54:42  11203 lcn changed to 23
+2025-May-13::17:54:42  15101 lcn changed to 302
+2025-May-13::17:57:42  15101 LCN changed from'302' to '33'
+2025-May-13::18:03:31  11111 name changed from'PURNIMA TV 0/' to 'GLOBE TV 0/'
+2025-June-02::14:31:37  11505 lcn changed to 280
+2025-June-02::14:31:37  11006 lcn changed to 262
+2025-June-02::14:34:03  23006 lcn changed to 913
+2025-June-02::14:34:03  15803 lcn changed to 916
+2025-June-12::12:17:26  15202 name changed from'TEST HD3' to 'TEST HD33'
+2025-June-12::17:48:08  15202 name changed from'TEST HD33' to 'TEST HD3'
+2025-June-12::17:49:40  15202 name changed from'TEST HD3' to 'TEST HD33'
+2025-June-12::12:20:08  15202 lcn changed to 983
+2025-June-12::12:20:08  15205 lcn changed to 982
+2025-June-12::17:51:35  15205 lcn changed to 983
+2025-June-12::17:51:35  15202 lcn changed to 982
+2025-June-18::20:37:14  15006 lcn changed to 23
+2025-June-18::20:37:14  11203 lcn changed to 11

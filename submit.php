@@ -1,5 +1,6 @@
 <?php
 session_start();
+date_default_timezone_set('Asia/Kolkata');
 $_SESSION['sidcounter']=array();
 $_SESSION['sid_lcn'][]=array();
 //starting the connection to db
