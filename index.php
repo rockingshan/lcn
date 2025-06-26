@@ -80,7 +80,7 @@ WHERE
             <li><a href="index.php?par=kolkata">Kolkata</a></li>
             <li><a href="index.php?par=berhampore">Berhampore</a></li>
             <li><a href="index.php?par=bankura">Bankura</a></li>
-            <li><a href="index.php?par=haldia">Haldia</a></li>
+            <li><a href="index.php?par=haldia">SITI Headend</a></li>
           </ul>
         </li>
       </div>

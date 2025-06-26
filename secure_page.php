@@ -8,32 +8,28 @@ if (!isset($_SESSION['user'])) {
 //starting the connection to db
 require_once "include/connect.php";
 include 'include/log.php';
-//Seleceting the database
-if(isset($_POST['selectdb'])){
-  $db_id = $_POST['selectdb'];
-  $query_dbname = "SELECT * FROM city_tb WHERE city_id = $db_id";
-  $query_db_result = mysqli_fetch_assoc(mysqli_query($auth,$query_dbname)); //running query on Kol database city table
-  mysqli_close($auth);
-  $_SESSION['select_db'] = $query_db_result['db_name'];
-  $_SESSION['city'] = $query_db_result['city_name'];
 
- 
-  unset($_SESSION['sidcounter']);
-  unset($_SESSION['sid_lcn']);
-}
+$sql = "SELECT 
+    lcn.genre,
+    lcn.lcn,
+    sid.sid,
+    sid.freq,
+    cm.channelName,
+    br.broadcaster,
+    cm.price
+FROM 
+    channel_mapping_tb AS cmap
+INNER JOIN sid_tb AS sid ON cmap.sid_id = sid.sid_id
+INNER JOIN lcn_tb AS lcn ON cmap.lcn_id = lcn.lcn_id
+LEFT JOIN channel_master_tb AS cm ON cmap.channel_id = cm.channel_id
+LEFT JOIN broadcaster_tb AS br ON cm.broadcaster_id = br.broadcaster_id
+WHERE 
+    sid.city_id = 1";
 
-
-mysqli_select_db($con,$_SESSION['select_db']) or die("No database");
-//making the search in db
-$sql = "SELECT * FROM channel_tb,lcn_tb,sid_tb WHERE channel_tb.lcn=lcn_tb.lcn AND channel_tb.sid=sid_tb.sid ORDER BY lcn_tb.lcn";
-
-//an alternative query
-//$sql2 = "SELECT lcn_tb.genre,lcn_tb.lcn,channel_tb.channel FROM lcn_tb LEFT JOIN channel_tb ON lcn_tb.lcn=channel_tb.lcn";
-
-$result = mysqli_query($con,$sql);
-if (!$result) { // add this check.
+  $result = mysqli_query($auth, $sql);
+  if (!$result) { // add this check.
     die('Invalid query: ' . mysqli_error());
-}
+  }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
 "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
@@ -100,18 +96,6 @@ function confirmAction(){
           <li><a href="create_master.php">Download Master LCN file</a></li>
         </ul>
       </li>
-			<li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-floppy-save"></span> Download Package details
-        <span class="caret"></span></a>
-        <ul class="dropdown-menu">
-          <li><a href="export_package.php?par=bronze">Export Bronze package</a></li>
-          <li><a href="export_package.php?par=silver">Export Silver package</a></li>
-          <li><a href="export_package.php?par=gold">Export Gold package</a></li>
-					<li><a href="export_package.php?par=platinum">Export Platinum package</a></li>
-<!--					<li><a href="export_package.php?par=power">Export Power package</a></li>-->
-					<li><a href="package_master.php">Export Package Master</a></li>
-        </ul>
-      </li>
       <li><a href="submit_data.php">Get BAT Submit Data</a></li>
       <li><a href="channel_add.php" rel="modal:open">Add new Channel</a></li>
       <li><a href="mod_log.php">Modification logs</a></li>
@@ -124,7 +108,7 @@ function confirmAction(){
     </ul>
 
     <ul class="nav navbar-nav navbar-right">
-			<li><a href="city_select.php"><strong><span class="glyphicon glyphicon-send"></span> <?php echo $_SESSION['city'] ?></strong></a></li>
+			<li><a href="#"><strong><span class="glyphicon glyphicon-send"></span> <?php echo "Kolkata" ?></strong></a></li>
       <li><a href="logout.php"><span class="glyphicon glyphicon-log-out"></span> Log Out</a></li>
     </ul>
   </div>
@@ -164,7 +148,7 @@ $display .="
 	<td>".$row['lcn']."</td>
 	<td>".$row['sid']."</td>
 	<td>".$row['freq']."</td>
-	<td><strong>".$row['channel']."</strong><a href=\"lcn_name_edit.php?sid=".$row['sid']."\" rel=\"modal:open\"><span class=\"pull-right\"><span class=\"glyphicon glyphicon-edit\" style=\"color:violet\"></span></span></a></td>
+	<td><strong>".$row['channelName']."</strong><a href=\"lcn_name_edit.php?sid=".$row['sid']."\" rel=\"modal:open\"><span class=\"pull-right\"><span class=\"glyphicon glyphicon-edit\" style=\"color:violet\"></span></span></a></td>
 	<td><a href=\"lcn_edit.php?sid=".$row['sid']."\" data-toggle=\"tooltip\" title=\"Edit Channel LCN\" rel=\"modal:open\"><span class=\"glyphicon glyphicon-pencil\"></span></a></td>
 	<td><a href=\"lcn_swap.php?sid=".$row['sid']."\" data-toggle=\"tooltip\" title=\"Swap LCN with other Channel\" rel=\"modal:open\"><span class=\"glyphicon glyphicon-transfer\" style=\"color:black\"></span></a></td>
 	<td><a href=\"package_edit.php?sid=".$row['sid']."\" data-toggle=\"tooltip\" title=\"Edit Package\" rel=\"modal:open\"><span class=\"glyphicon glyphicon-scissors\" style=\"color:green\"></span></a></td>
