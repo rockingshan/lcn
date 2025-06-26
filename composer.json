@@ -1,0 +1,15 @@
+{
+    "name": "shantanu/lcn",
+    "description": "Channel and its LCN manage",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "shantanu"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "phpoffice/phpspreadsheet": "^4.4"
+    }
+}

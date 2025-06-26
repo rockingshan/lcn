@@ -2,28 +2,26 @@
   session_start();
   //starting the connection to db
   include("include/connect.php");
-  if (isset($_GET['par'])) {
-    if ($_GET['par'] == 'kolkata') {
-      $_SESSION['select_db'] = 'meghbela_lcn_db_kol';
-      $_SESSION['city'] = 'Kolkata';
-    } elseif ($_GET['par'] == 'berhampore') {
-      $_SESSION['select_db'] = 'meghbela_lcn_db_bpc';
-      $_SESSION['city'] = 'Berhampore';
-    } elseif ($_GET['par'] == 'haldia') {
-      $_SESSION['select_db'] = 'meghbela_lcn_db_hlz';
-      $_SESSION['city'] = 'Haldia';
-    } elseif ($_GET['par'] == 'bankura') {
-      $_SESSION['select_db'] = 'meghbela_lcn_db_bqa';
-      $_SESSION['city'] = 'Bankura';
-    }
-  } else {
-    $_SESSION['select_db'] = 'meghbela_lcn_db_kol';
-  }
-  mysqli_select_db($con, $_SESSION['select_db']) or die("No database");
+ // mysqli_select_db($con, $_SESSION['select_db']) or die("No database");
   //making the search in db
-  $sql = "SELECT * FROM channel_tb,lcn_tb,package_tb,sid_tb WHERE channel_tb.lcn=lcn_tb.lcn AND channel_tb.sid=package_tb.sid AND package_tb.sid=sid_tb.sid ORDER BY lcn_tb.lcn";
+  $sql = "SELECT 
+    lcn.genre,
+    lcn.lcn,
+    sid.sid,
+    sid.freq,
+    cm.channelName,
+    br.broadcaster,
+    cm.price
+FROM 
+    channel_mapping_tb AS cmap
+INNER JOIN sid_tb AS sid ON cmap.sid_id = sid.sid_id
+INNER JOIN lcn_tb AS lcn ON cmap.lcn_id = lcn.lcn_id
+LEFT JOIN channel_master_tb AS cm ON cmap.channel_id = cm.channel_id
+LEFT JOIN broadcaster_tb AS br ON cm.broadcaster_id = br.broadcaster_id
+WHERE 
+    sid.city_id = 1";
 
-  $result = mysqli_query($con, $sql);
+  $result = mysqli_query($auth, $sql);
   if (!$result) { // add this check.
     die('Invalid query: ' . mysqli_error());
   }
@@ -73,7 +71,6 @@
       </div>
       <ul class="nav navbar-nav">
         <li><a href="export.php"><span class="glyphicon glyphicon-save"></span>Download LCN</a></li>
-        <li><a href="package_master.php"><span class="glyphicon glyphicon-floppy-save"></span>Export Package Master</a></li>
       </ul>
       <div class="nav navbar-nav">
         <li class="dropdown">
@@ -123,12 +120,7 @@
           <th data-field="sid" data-sortable="true">SID</th>
           <th data-field="freq" data-sortable="true">FREQ</th>
           <th data-field="name">CHANNEL NAME</th>
-          <th data-field="brn" data-sortable="true">205 </th>
-          <th data-field="sil" data-sortable="true"> 230 </th>
-          <th data-field="gold" data-sortable="true"> 295 </th>
-          <th data-field="gold" data-sortable="true"> 330 </th>
-          <th data-field="pla" data-sortable="true"> 350 </th>
-          <!--    <th data-field="pw" data-sortable="true"> Power pack </th>-->
+          <th data-field="brd" data-sortable="true">Broadcaster</th>
           <th> A La Carte Price(&#8377) </th>
         </tr>
       </thead>
@@ -142,12 +134,8 @@
     <td>" . $row['lcn'] . "</td>
     <td>" . $row['sid'] . "</td>
 	<td>" . $row['freq'] . "</td>
-    <td><strong>" . $row['channel'] . "</strong></td>
-    <td>" . $row['205'] . "</td>
-    <td>" . $row['230'] . "</td>
-    <td>" . $row['295'] . "</td>
-	<td>" . $row['330'] . "</td>
-    <td>" . $row['350'] . "</td>
+    <td><strong>" . $row['channelName'] . "</strong></td>
+    <td>" . $row['broadcaster'] . "</td>
     <td>" . $row['price'] . "</td>
 
   </tr>";

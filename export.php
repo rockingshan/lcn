@@ -1,27 +1,70 @@
 <?php
 session_start();
+require 'vendor/autoload.php';
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 include("include/connect.php");
-include 'include/log.php';
-if(!isset($_SESSION['select_db']) || !isset($_SESSION['city'])){
-	$_SESSION['select_db'] = 'meghbela_lcn_db_kol';
-	$_SESSION['city'] = 'Kolkata';
-}
-mysqli_select_db($con,$_SESSION['select_db']) or die("No database");
-
-error_reporting(E_ALL);
-ini_set('display_errors', TRUE);
-ini_set('display_startup_errors', TRUE);
 date_default_timezone_set('Asia/Kolkata');
 
 define('EOL',(PHP_SAPI == 'cli') ? PHP_EOL : '<br />');
 
-/** Include PHPExcel */
-require_once 'Classes/PHPExcel.php';
+$sql = "WITH ranked AS (
+    SELECT 
+        lcn.genre,
+        lcn.lcn,
+        cm.channelName,
+        br.broadcaster,
+        ROW_NUMBER() OVER (
+            PARTITION BY lcn.genre 
+            ORDER BY lcn.lcn
+        ) AS raw_rank
+    FROM 
+        channel_mapping_tb AS cmap
+    INNER JOIN sid_tb AS sid ON cmap.sid_id = sid.sid_id
+    INNER JOIN lcn_tb AS lcn ON cmap.lcn_id = lcn.lcn_id
+    LEFT JOIN channel_master_tb AS cm ON cmap.channel_id = cm.channel_id
+    LEFT JOIN broadcaster_tb AS br ON cm.broadcaster_id = br.broadcaster_id
+    WHERE 
+        sid.city_id = 1
+        AND br.broadcaster <> 'LOCAL'
+),
+full_data AS (
+    SELECT 
+        lcn.genre,
+        lcn.lcn,
+        cm.channelName,
+        br.broadcaster
+    FROM 
+        channel_mapping_tb AS cmap
+    INNER JOIN sid_tb AS sid ON cmap.sid_id = sid.sid_id
+    INNER JOIN lcn_tb AS lcn ON cmap.lcn_id = lcn.lcn_id
+    LEFT JOIN channel_master_tb AS cm ON cmap.channel_id = cm.channel_id
+    LEFT JOIN broadcaster_tb AS br ON cm.broadcaster_id = br.broadcaster_id
+    WHERE sid.city_id = 1
+)
+SELECT 
+    f.genre,
+    f.lcn,
+    f.channelName,
+    f.broadcaster,
+    COALESCE(r.raw_rank, 0) AS genre_rank
+FROM full_data f
+LEFT JOIN ranked r ON 
+    f.lcn = r.lcn AND 
+    f.channelName = r.channelName AND
+    f.broadcaster = r.broadcaster
+ORDER BY f.lcn, genre_rank";
 
-$objPHPExcel = new PHPExcel();
+$result = mysqli_query($auth,$sql);
+if (!$result) { // add this check.
+    die('Invalid query: ' . mysqli_error());
+}
+$rowcount=2;
 
-// Set document properties
-$objPHPExcel->getProperties()->setCreator("Meghbela Digital")
+$spreadsheet = new Spreadsheet();
+
+$spreadsheet->getProperties()->setCreator("Meghbela Digital")
 							 ->setLastModifiedBy("Meghbela")
 							 ->setTitle("MeghbelaLCN")
 							 ->setSubject("Meghbela LCN")
@@ -29,79 +72,25 @@ $objPHPExcel->getProperties()->setCreator("Meghbela Digital")
 							 ->setKeywords("LCN Excel")
 							 ->setCategory("LCN");
 // Add Heading
-$objPHPExcel->setActiveSheetIndex(0)
+$spreadsheet->setActiveSheetIndex(0)
             ->setCellValue('A1', 'GENRE')
             ->setCellValue('D1', 'LCN')
 			->setCellValue('B1', 'CHANNEL NAME')
 			->setCellValue('C1', 'BROADCASTER')
 			->setCellValue('E1', 'RANK');
-
-$objPHPExcel->getActiveSheet()->getStyle('A1:E1')->applyFromArray(
-		array(
-			'font'    => array(
-				'bold'      => true
-			),
-			'alignment' => array(
-				'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_RIGHT,
-			),
-			'borders' => array(
-				'top'     => array(
- 					'style' => PHPExcel_Style_Border::BORDER_THIN
- 				)
-			),
-			'fill' => array(
-	 			'type'       => PHPExcel_Style_Fill::FILL_GRADIENT_LINEAR,
-	  			'rotation'   => 90,
-	 			'startcolor' => array(
-	 				'argb' => 'FFA0A0A0'
-	 			),
-	 			'endcolor'   => array(
-	 				'argb' => 'FFFFFFFF'
-	 			)
-	 		)
-		)
-);
-
-$objPHPExcel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
-$objPHPExcel->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
-$objPHPExcel->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
-$objPHPExcel->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
-$objPHPExcel->getActiveSheet()->getColumnDimension('E')->setAutoSize(true);
-$objPHPExcel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-$objPHPExcel->getActiveSheet()->getStyle('B1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-$objPHPExcel->getActiveSheet()->getStyle('C1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-$objPHPExcel->getActiveSheet()->getStyle('D1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-$objPHPExcel->getActiveSheet()->getStyle('E1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-
-//making the search in db
-$sql = "SELECT * FROM channel_tb,lcn_tb WHERE channel_tb.lcn=lcn_tb.lcn ORDER BY lcn_tb.lcn";
-
-$result = mysqli_query($con,$sql);
-if (!$result) { // add this check.
-    die('Invalid query: ' . mysqli_error());
-}
-$rowcount=2;
-$rank_check = "HINDI MOVIES";
-$rank_placeholder = 0;
+		
 while($row = mysqli_fetch_array($result)){
-	if($row['genre']==$rank_check){
-		$rank_placeholder++;
-	}
-	else{
-			$rank_placeholder = 1;
-		}
 
-	$objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowcount, $row['genre']);
-  $objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowcount, $row['lcn']);
-  $objPHPExcel->getActiveSheet()->SetCellValue('B'.$rowcount, $row['channel']);
-  $objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowcount, $row['broadcaster']);
-  $objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowcount, $rank_placeholder);
+	$spreadsheet->getActiveSheet()->SetCellValue('A'.$rowcount, $row['genre']);
+  $spreadsheet->getActiveSheet()->SetCellValue('D'.$rowcount, $row['lcn']);
+  $spreadsheet->getActiveSheet()->SetCellValue('B'.$rowcount, $row['channelName']);
+  $spreadsheet->getActiveSheet()->SetCellValue('C'.$rowcount, $row['broadcaster']);
+  $spreadsheet->getActiveSheet()->SetCellValue('E'.$rowcount, $row['genre_rank']);
   $rowcount++;
-  $rank_check = $row['genre'];
 }
-$file_name=$_SESSION['city']."_LCN_".Date('Y-m-d').".xlsx";
-$objPHPExcel->setActiveSheetIndex(0);
-// Redirect output to a client’s web browser (Excel2007)
+
+// Redirect output to a client’s web browser (Xlsx)
+$file_name="Kolkata_LCN_".Date('Y-m-d').".xlsx";
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 header('Content-Disposition: attachment;filename='.$file_name.'');
 header('Cache-Control: max-age=0');
@@ -109,13 +98,13 @@ header('Cache-Control: max-age=0');
 header('Cache-Control: max-age=1');
 
 // If you're serving to IE over SSL, then the following may be needed
-header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
-header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
-header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
-header ('Pragma: public'); // HTTP/1.0
+header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
+header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+header('Pragma: public'); // HTTP/1.0
 
-$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-$objWriter->save('php://output');
+$writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+$writer->save('php://output');
 
 
 ?>
