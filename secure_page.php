@@ -10,11 +10,13 @@ require_once "include/connect.php";
 include 'include/log.php';
 
 $sql = "SELECT 
+    cmap.cmap_id,
     lcn.genre,
     lcn.lcn,
     sid.sid,
     sid.freq,
     cm.channelName,
+    cm.channel_id,
     br.broadcaster,
     cm.price
 FROM 
@@ -148,8 +150,8 @@ $display .="
 	<td>".$row['lcn']."</td>
 	<td>".$row['sid']."</td>
 	<td>".$row['freq']."</td>
-	<td><strong>".$row['channelName']."</strong><a href=\"lcn_name_edit.php?sid=".$row['sid']."\" rel=\"modal:open\"><span class=\"pull-right\"><span class=\"glyphicon glyphicon-edit\" style=\"color:violet\"></span></span></a></td>
-	<td><a href=\"lcn_edit.php?sid=".$row['sid']."\" data-toggle=\"tooltip\" title=\"Edit Channel LCN\" rel=\"modal:open\"><span class=\"glyphicon glyphicon-pencil\"></span></a></td>
+	<td><strong>".$row['channelName']."</strong><a href=\"lcn_name_edit.php?channel_id=".$row['channel_id']."\" rel=\"modal:open\"><span class=\"pull-right\"><span class=\"glyphicon glyphicon-edit\" style=\"color:violet\"></span></span></a></td>
+	<td><a href=\"lcn_edit.php?mapping_id=".$row['cmap_id']."\" data-toggle=\"tooltip\" title=\"Edit Channel LCN\" rel=\"modal:open\"><span class=\"glyphicon glyphicon-pencil\"></span></a></td>
 	<td><a href=\"lcn_swap.php?sid=".$row['sid']."\" data-toggle=\"tooltip\" title=\"Swap LCN with other Channel\" rel=\"modal:open\"><span class=\"glyphicon glyphicon-transfer\" style=\"color:black\"></span></a></td>
 	<td><a href=\"package_edit.php?sid=".$row['sid']."\" data-toggle=\"tooltip\" title=\"Edit Package\" rel=\"modal:open\"><span class=\"glyphicon glyphicon-scissors\" style=\"color:green\"></span></a></td>
 	<td><a href=\"package_delete.php?sid=".$row['sid']."\" data-toggle=\"tooltip\" title=\"Delete Channel\" onclick=\"return confirmAction()\"><span class=\"glyphicon glyphicon-remove\" style=\"color:red\"></span></a></td>

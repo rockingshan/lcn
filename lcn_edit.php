@@ -6,15 +6,19 @@ if (!isset($_SESSION['user'])) {
 //starting the connection to db
 include("include/connect.php");
 
-mysqli_select_db($con,$_SESSION['select_db']) or die("No database");
-
-$edit_sid=$_GET['sid'];
-$edit_sql= "SELECT * from channel_tb WHERE sid='$edit_sid'";
-$edit_result = mysqli_query($con,$edit_sql);
+$edit_cid=$_GET['channel_id'];
+$edit_sql= "SELECT * FROM `channel_master_tb` 
+LEFT JOIN broadcaster_tb ON channel_master_tb.broadcaster_id = broadcaster_tb.broadcaster_id
+WHERE channel_master_tb.channel_id='$edit_cid'";
+$edit_result = mysqli_query($auth,$edit_sql);
 if (!$edit_result) { // add this check.
     die('Invalid query: ' . mysqli_error());
 }
 $edit_row = mysqli_fetch_array($edit_result);
+
+$broad_sql = "SELECT * FROM broadcaster_tb";
+$broad_result = mysqli_query($auth,$broad_sql);
+
 
 $blank_lcn_sql="SELECT * from lcn_tb WHERE lcn_tb.lcn NOT IN (SELECT lcn FROM channel_tb)";
 $blank_lcn_result=mysqli_query($con,$blank_lcn_sql);
