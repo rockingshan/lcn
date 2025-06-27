@@ -51,6 +51,25 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) u
 
     // Logs page
     $r->addRoute('GET', '/logs', [new HomeController($auth), 'logsPage']);
+
+    // IRD Inventory page
+    $r->addRoute('GET', '/ird-inventory', [new HomeController($auth), 'irdInventoryPage']);
+
+    // IRD Inventory CRUD
+    $r->addRoute('GET', '/ird-inventory/add', [new HomeController($auth), 'irdAddForm']);
+    $r->addRoute('POST', '/ird-inventory/add', [new HomeController($auth), 'irdAddSubmit']);
+    $r->addRoute('GET', '/ird-inventory/edit/{ird_id:\d+}', [new HomeController($auth), 'irdEditForm']);
+    $r->addRoute('POST', '/ird-inventory/edit/{ird_id:\d+}', [new HomeController($auth), 'irdEditSubmit']);
+    $r->addRoute('POST', '/ird-inventory/delete/{ird_id:\d+}', [new HomeController($auth), 'irdDelete']);
+
+    // Add SID and Add Channel
+    $r->addRoute('GET', '/add-sid', [new HomeController($auth), 'addSidForm']);
+    $r->addRoute('POST', '/add-sid', [new HomeController($auth), 'addSidSubmit']);
+    $r->addRoute('GET', '/add-channel', [new HomeController($auth), 'addChannelForm']);
+    $r->addRoute('POST', '/add-channel', [new HomeController($auth), 'addChannelSubmit']);
+
+    // AJAX: Check SID uniqueness
+    $r->addRoute('POST', '/ajax/check-sid', [new HomeController($auth), 'ajaxCheckSid']);
 });
 
 // Fetch method and URI from somewhere

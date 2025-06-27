@@ -32,7 +32,7 @@
                             <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Download Master LCN</a>
                          </div>
                     </div>
-                    <a href="#" class="py-5 px-3 text-gray-700 hover:text-gray-900">Broadcaster IRD Inventory</a>
+                    <a href="<?php echo BASE_PATH; ?>/ird-inventory" class="py-5 px-3 text-gray-700 hover:text-gray-900">Broadcaster IRD Inventory</a>
                     <a href="<?php echo BASE_PATH; ?>/logs" class="py-5 px-3 text-gray-700 hover:text-gray-900">View Logs</a>
                 </div>
             </div>
@@ -45,7 +45,7 @@
                         <a href="#" class="py-5 px-3 text-gray-700 hover:text-gray-900 flex items-center" onclick="event.preventDefault(); document.getElementById('cityDropdown').classList.toggle('hidden');">
                             <i class="fas fa-plane mr-1"></i> 
                             <?php 
-                                $cityNames = [1=>'Kolkata',2=>'Berhampore',3=>'Bankura',4=>'SITI Headend'];
+                                $cityNames = [1=>'Kolkata',2=>'Chandipur',3=>'Berhampore',4=>'SITI Headend'];
                                 $currentCity = isset($_SESSION['city_id']) ? (int)$_SESSION['city_id'] : 1;
                                 echo $cityNames[$currentCity];
                             ?>
@@ -53,11 +53,21 @@
                         </a>
                         <div id="cityDropdown" class="absolute right-0 hidden bg-white shadow-lg rounded-md mt-0 pt-2 w-48 z-10">
                             <button type="button" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="setCity(1)">Kolkata</button>
-                            <button type="button" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="setCity(2)">Berhampore</button>
-                            <button type="button" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="setCity(3)">Bankura</button>
+                            <button type="button" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="setCity(2)">Chandipur</button>
+                            <button type="button" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="setCity(3)">Berhampore</button>
                             <button type="button" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="setCity(4)">SITI Headend</button>
                         </div>
                     </form>
+                </div>
+                <div class="relative group">
+                    <a href="#" class="py-5 px-3 text-gray-700 hover:text-gray-900 flex items-center">
+                        <i class="fas fa-plus mr-1"></i> Add Records <i class="fas fa-chevron-down fa-xs ml-1"></i>
+                    </a>
+                    <div class="absolute hidden group-hover:block bg-white shadow-lg rounded-md mt-0 pt-2 w-48 z-10">
+                        <a href="<?php echo BASE_PATH; ?>/ird-inventory/add" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Add New IRD</a>
+                        <a href="<?php echo BASE_PATH; ?>/add-sid" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Add New SID</a>
+                        <a href="<?php echo BASE_PATH; ?>/add-channel" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Add New Channel</a>
+                    </div>
                 </div>
                 <a href="<?php echo BASE_PATH; ?>/logout" class="py-2 px-3 bg-red-500 text-white rounded hover:bg-red-600 transition duration-300 flex items-center">
                     <i class="fas fa-sign-out-alt mr-2"></i>Logout

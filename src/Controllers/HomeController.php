@@ -251,4 +251,175 @@ class HomeController
         $totalPages = ceil($total / $perPage);
         require __DIR__ . '/../../views/logs.php';
     }
+
+    public function irdInventoryPage()
+    {
+        $city_id = isset($_SESSION['city_id']) ? (int)$_SESSION['city_id'] : 1;
+        $inventory = [];
+        $result = $this->db->query("SELECT ird.ird_id, cm.channelName, br.broadcaster, ird.stbNum, ird.vcNum, ird.updated_at FROM ird_mapping_tb AS ird LEFT JOIN channel_master_tb AS cm ON ird.channel_id = cm.channel_id LEFT JOIN broadcaster_tb AS br ON ird.broadcaster_id = br.broadcaster_id WHERE ird.city_id = $city_id ORDER BY ird.updated_at DESC");
+        while ($row = $result->fetch_assoc()) {
+            $inventory[] = $row;
+        }
+        require __DIR__ . '/../../views/ird_inventory.php';
+    }
+
+    public function irdAddForm()
+    {
+        // Get channels and broadcasters for dropdowns
+        $channels = [];
+        $result = $this->db->query("SELECT channel_id, channelName FROM channel_master_tb ORDER BY channelName ASC");
+        while ($row = $result->fetch_assoc()) {
+            $channels[] = $row;
+        }
+        $broadcasters = [];
+        $result = $this->db->query("SELECT broadcaster_id, broadcaster FROM broadcaster_tb ORDER BY broadcaster ASC");
+        while ($row = $result->fetch_assoc()) {
+            $broadcasters[] = $row;
+        }
+        require __DIR__ . '/../../views/ird_add.php';
+    }
+
+    public function irdAddSubmit()
+    {
+        $city_id = isset($_SESSION['city_id']) ? (int)$_SESSION['city_id'] : 1;
+        $channel_id = (int)($_POST['channel_id'] ?? 0);
+        $broadcaster_id = (int)($_POST['broadcaster_id'] ?? 0);
+        $stbNum = trim($_POST['stbNum'] ?? '');
+        $vcNum = trim($_POST['vcNum'] ?? '');
+        if (!$channel_id || !$broadcaster_id || $stbNum === '' || $vcNum === '') {
+            echo 'All fields are required.';
+            exit;
+        }
+        $stmt = $this->db->prepare("INSERT INTO ird_mapping_tb (channel_id, broadcaster_id, city_id, stbNum, vcNum, created_at, updated_at) VALUES (?, ?, ?, ?, ?, NOW(), NOW())");
+        $stmt->bind_param('iiiss', $channel_id, $broadcaster_id, $city_id, $stbNum, $vcNum);
+        $stmt->execute();
+        $stmt->close();
+        \App\LogHelper::log($this->db, 'Add IRD', "Added IRD for channel_id $channel_id, broadcaster_id $broadcaster_id, STB $stbNum, VC $vcNum");
+        header('Location: ' . BASE_PATH . '/ird-inventory');
+        exit();
+    }
+
+    public function irdEditForm($ird_id)
+    {
+        $ird_id = (int)$ird_id;
+        $stmt = $this->db->prepare("SELECT * FROM ird_mapping_tb WHERE ird_id = ?");
+        $stmt->bind_param('i', $ird_id);
+        $stmt->execute();
+        $ird = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        if (!$ird) {
+            echo 'IRD entry not found.';
+            exit;
+        }
+        $channels = [];
+        $result = $this->db->query("SELECT channel_id, channelName FROM channel_master_tb ORDER BY channelName ASC");
+        while ($row = $result->fetch_assoc()) {
+            $channels[] = $row;
+        }
+        $broadcasters = [];
+        $result = $this->db->query("SELECT broadcaster_id, broadcaster FROM broadcaster_tb ORDER BY broadcaster ASC");
+        while ($row = $result->fetch_assoc()) {
+            $broadcasters[] = $row;
+        }
+        require __DIR__ . '/../../views/ird_edit.php';
+    }
+
+    public function irdEditSubmit($ird_id)
+    {
+        $ird_id = (int)$ird_id;
+        $channel_id = (int)($_POST['channel_id'] ?? 0);
+        $broadcaster_id = (int)($_POST['broadcaster_id'] ?? 0);
+        $stbNum = trim($_POST['stbNum'] ?? '');
+        $vcNum = trim($_POST['vcNum'] ?? '');
+        if (!$channel_id || !$broadcaster_id || $stbNum === '' || $vcNum === '') {
+            echo 'All fields are required.';
+            exit;
+        }
+        $stmt = $this->db->prepare("UPDATE ird_mapping_tb SET channel_id=?, broadcaster_id=?, stbNum=?, vcNum=?, updated_at=NOW() WHERE ird_id=?");
+        $stmt->bind_param('iissi', $channel_id, $broadcaster_id, $stbNum, $vcNum, $ird_id);
+        $stmt->execute();
+        $stmt->close();
+        \App\LogHelper::log($this->db, 'Edit IRD', "Edited IRD $ird_id: channel_id $channel_id, broadcaster_id $broadcaster_id, STB $stbNum, VC $vcNum");
+        header('Location: ' . BASE_PATH . '/ird-inventory');
+        exit();
+    }
+
+    public function irdDelete($ird_id)
+    {
+        $ird_id = (int)$ird_id;
+        $stmt = $this->db->prepare("DELETE FROM ird_mapping_tb WHERE ird_id = ?");
+        $stmt->bind_param('i', $ird_id);
+        $stmt->execute();
+        $stmt->close();
+        \App\LogHelper::log($this->db, 'Delete IRD', "Deleted IRD $ird_id");
+        header('Location: ' . BASE_PATH . '/ird-inventory');
+        exit();
+    }
+
+    public function addSidForm()
+    {
+        require __DIR__ . '/../../views/add_sid.php';
+    }
+
+    public function addSidSubmit()
+    {
+        $sid = (int)($_POST['sid'] ?? 0);
+        $ts = trim($_POST['ts'] ?? '');
+        $freq = (int)($_POST['freq'] ?? 0);
+        $sidhex = trim($_POST['sidhex'] ?? '');
+        $city_id = isset($_SESSION['city_id']) ? (int)$_SESSION['city_id'] : 1;
+        if (!$sid || $ts === '' || !$freq || $sidhex === '') {
+            echo 'All fields are required.';
+            exit;
+        }
+        $stmt = $this->db->prepare("INSERT INTO sid_tb (sid, ts, freq, sidhex, city_id) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param('isisi', $sid, $ts, $freq, $sidhex, $city_id);
+        $stmt->execute();
+        $stmt->close();
+        \App\LogHelper::log($this->db, 'Add SID', "Added SID $sid, TS $ts, Freq $freq, Hex $sidhex, City $city_id");
+        header('Location: ' . BASE_PATH . '/');
+        exit();
+    }
+
+    public function addChannelForm()
+    {
+        $broadcasters = [];
+        $result = $this->db->query("SELECT broadcaster_id, broadcaster FROM broadcaster_tb ORDER BY broadcaster ASC");
+        while ($row = $result->fetch_assoc()) {
+            $broadcasters[] = $row;
+        }
+        require __DIR__ . '/../../views/add_channel.php';
+    }
+
+    public function addChannelSubmit()
+    {
+        $name = trim($_POST['channelName'] ?? '');
+        $broadcaster_id = (int)($_POST['broadcaster_id'] ?? 0);
+        $price = trim($_POST['price'] ?? '');
+        if ($name === '' || !$broadcaster_id || $price === '') {
+            echo 'All fields are required.';
+            exit;
+        }
+        $stmt = $this->db->prepare("INSERT INTO channel_master_tb (channelName, broadcaster_id, price, created_at, updated_at) VALUES (?, ?, ?, NOW(), NOW())");
+        $stmt->bind_param('sid', $name, $broadcaster_id, $price);
+        $stmt->execute();
+        $stmt->close();
+        \App\LogHelper::log($this->db, 'Add Channel', "Added Channel $name, Broadcaster $broadcaster_id, Price $price");
+        header('Location: ' . BASE_PATH . '/');
+        exit();
+    }
+
+    public function ajaxCheckSid()
+    {
+        header('Content-Type: application/json');
+        $sid = (int)($_POST['sid'] ?? 0);
+        $city_id = isset($_SESSION['city_id']) ? (int)$_SESSION['city_id'] : 1;
+        $stmt = $this->db->prepare("SELECT COUNT(*) as cnt FROM sid_tb WHERE sid = ? AND city_id = ?");
+        $stmt->bind_param('ii', $sid, $city_id);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        echo json_encode(['exists' => ($result['cnt'] > 0)]);
+        exit();
+    }
 } 
