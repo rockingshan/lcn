@@ -40,6 +40,10 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) u
     // Edit Channel routes
     $r->addRoute('GET', '/edit-channel/{channel_id:\d+}', [new HomeController($auth), 'editChannelForm']);
     $r->addRoute('POST', '/edit-channel/{channel_id:\d+}', [new HomeController($auth), 'editChannelSubmit']);
+
+    // Modify LCN routes
+    $r->addRoute('GET', '/modify-lcn/{cmap_id:\d+}', [new HomeController($auth), 'modifyLcnForm']);
+    $r->addRoute('POST', '/modify-lcn/{cmap_id:\d+}', [new HomeController($auth), 'modifyLcnSubmit']);
 });
 
 // Fetch method and URI from somewhere

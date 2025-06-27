@@ -105,4 +105,48 @@ class HomeController
         header('Location: ' . BASE_PATH . '/');
         exit();
     }
+
+    public function modifyLcnForm($cmap_id)
+    {
+        $cmap_id = (int)$cmap_id;
+        if (!$cmap_id) {
+            http_response_code(404);
+            echo 'Mapping not found.';
+            exit;
+        }
+        // Get mapping and joined info
+        $stmt = $this->db->prepare("SELECT cmap.cmap_id, cmap.lcn_id, sid.sid, lcn.lcn, lcn.genre, cm.channelName FROM channel_mapping_tb AS cmap INNER JOIN sid_tb AS sid ON cmap.sid_id = sid.sid_id INNER JOIN lcn_tb AS lcn ON cmap.lcn_id = lcn.lcn_id LEFT JOIN channel_master_tb AS cm ON cmap.channel_id = cm.channel_id WHERE cmap.cmap_id = ?");
+        $stmt->bind_param('i', $cmap_id);
+        $stmt->execute();
+        $mapping = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        if (!$mapping) {
+            http_response_code(404);
+            echo 'Mapping not found.';
+            exit;
+        }
+        // Get available blank LCNs
+        $blanks = [];
+        $result = $this->db->query("SELECT * FROM lcn_tb WHERE lcn_tb.lcn_id NOT IN (SELECT lcn_id FROM channel_mapping_tb)");
+        while ($row = $result->fetch_assoc()) {
+            $blanks[] = $row;
+        }
+        require __DIR__ . '/../../views/modify_lcn.php';
+    }
+
+    public function modifyLcnSubmit($cmap_id)
+    {
+        $cmap_id = (int)$cmap_id;
+        $lcn_id = (int)($_POST['lcn_id'] ?? 0);
+        if (!$cmap_id || !$lcn_id) {
+            echo 'Invalid request.';
+            exit;
+        }
+        $stmt = $this->db->prepare("UPDATE channel_mapping_tb SET lcn_id=?, updated_at=NOW() WHERE cmap_id=?");
+        $stmt->bind_param('ii', $lcn_id, $cmap_id);
+        $stmt->execute();
+        $stmt->close();
+        header('Location: ' . BASE_PATH . '/');
+        exit();
+    }
 } 
