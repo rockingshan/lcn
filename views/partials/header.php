@@ -28,11 +28,12 @@
                     <div class="relative group">
                          <a href="#" class="py-5 px-3 text-gray-700 hover:text-gray-900">Downloads <i class="fas fa-chevron-down fa-xs"></i></a>
                          <div class="absolute hidden group-hover:block bg-white shadow-lg rounded-md mt-0 pt-2 w-48 z-10">
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Download LCN</a>
+                            <a href="<?php echo BASE_PATH; ?>/export-lcn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Download LCN</a>
                             <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Download Master LCN</a>
                          </div>
                     </div>
                     <a href="<?php echo BASE_PATH; ?>/ird-inventory" class="py-5 px-3 text-gray-700 hover:text-gray-900">Broadcaster IRD Inventory</a>
+                    <a href="<?php echo BASE_PATH; ?>/ird-challan" class="py-5 px-3 text-gray-700 hover:text-gray-900">IRD Challan Details</a>
                     <a href="<?php echo BASE_PATH; ?>/logs" class="py-5 px-3 text-gray-700 hover:text-gray-900">View Logs</a>
                 </div>
             </div>
@@ -66,6 +67,7 @@
                     <div class="absolute hidden group-hover:block bg-white shadow-lg rounded-md mt-0 pt-2 w-48 z-10">
                         <a href="<?php echo BASE_PATH; ?>/ird-inventory/add" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Add New IRD</a>
                         <a href="<?php echo BASE_PATH; ?>/add-sid" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Add New SID</a>
+                        <a href="<?php echo BASE_PATH; ?>/add-channel-mapping" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Add Channel Mapping</a>
                         <a href="<?php echo BASE_PATH; ?>/add-channel" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Add New Channel</a>
                     </div>
                 </div>

@@ -27,13 +27,15 @@ class HomeController
             cm.channelName,
             cm.channel_id,
             br.broadcaster,
-            cm.price
+            cm.price,
+            ird.ird_id
         FROM 
             channel_mapping_tb AS cmap
         INNER JOIN sid_tb AS sid ON cmap.sid_id = sid.sid_id
         INNER JOIN lcn_tb AS lcn ON cmap.lcn_id = lcn.lcn_id
         LEFT JOIN channel_master_tb AS cm ON cmap.channel_id = cm.channel_id
         LEFT JOIN broadcaster_tb AS br ON cm.broadcaster_id = br.broadcaster_id
+        LEFT JOIN ird_mapping_tb AS ird ON ird.channel_id = cm.channel_id AND ird.city_id = $city_id
         WHERE 
             sid.city_id = $city_id ORDER BY lcn.lcn ASC";
 
@@ -420,6 +422,212 @@ class HomeController
         $result = $stmt->get_result()->fetch_assoc();
         $stmt->close();
         echo json_encode(['exists' => ($result['cnt'] > 0)]);
+        exit();
+    }
+
+    public function addChannelMappingForm()
+    {
+        $city_id = isset($_SESSION['city_id']) ? (int)$_SESSION['city_id'] : 1;
+        // SIDs not yet mapped for this city
+        $sids = [];
+        $result = $this->db->query("SELECT sid_id, sid FROM sid_tb WHERE city_id = $city_id AND sid_id NOT IN (SELECT sid_id FROM channel_mapping_tb)");
+        while ($row = $result->fetch_assoc()) {
+            $sids[] = $row;
+        }
+        // LCNs not yet mapped for this city
+        $lcns = [];
+        $result = $this->db->query("SELECT lcn_id, lcn, genre FROM lcn_tb WHERE lcn_id NOT IN (SELECT lcn_id FROM channel_mapping_tb)");
+        while ($row = $result->fetch_assoc()) {
+            $lcns[] = $row;
+        }
+        // Channel names (optional)
+        $channels = [];
+        $result = $this->db->query("SELECT channel_id, channelName FROM channel_master_tb ORDER BY channelName ASC");
+        while ($row = $result->fetch_assoc()) {
+            $channels[] = $row;
+        }
+        require __DIR__ . '/../../views/add_channel_mapping.php';
+    }
+
+    public function addChannelMappingSubmit()
+    {
+        $sid_id = (int)($_POST['sid_id'] ?? 0);
+        $lcn_id = (int)($_POST['lcn_id'] ?? 0);
+        $channel_id = isset($_POST['channel_id']) && $_POST['channel_id'] !== '' ? (int)$_POST['channel_id'] : null;
+        if (!$sid_id || !$lcn_id) {
+            echo 'SID and LCN are required.';
+            exit;
+        }
+        // Check if SID or LCN already mapped
+        $exists = $this->db->query("SELECT 1 FROM channel_mapping_tb WHERE sid_id = $sid_id OR lcn_id = $lcn_id")->fetch_assoc();
+        if ($exists) {
+            echo 'Selected SID or LCN is already mapped.';
+            exit;
+        }
+        $stmt = $this->db->prepare("INSERT INTO channel_mapping_tb (sid_id, lcn_id, channel_id, created_at, updated_at) VALUES (?, ?, ?, NOW(), NOW())");
+        $stmt->bind_param('iii', $sid_id, $lcn_id, $channel_id);
+        $stmt->execute();
+        $stmt->close();
+        \App\LogHelper::log($this->db, 'Add Channel Mapping', "Mapped SID $sid_id to LCN $lcn_id" . ($channel_id ? ", Channel $channel_id" : ''));
+        header('Location: ' . BASE_PATH . '/');
+        exit();
+    }
+
+    public function exportLcnExcel()
+    {
+        require_once __DIR__ . '/../../vendor/autoload.php';
+        $city_id = isset($_SESSION['city_id']) ? (int)$_SESSION['city_id'] : 1;
+        $sql = "WITH ranked AS (
+            SELECT 
+                lcn.genre,
+                lcn.lcn,
+                cm.channelName,
+                br.broadcaster,
+                ROW_NUMBER() OVER (
+                    PARTITION BY lcn.genre 
+                    ORDER BY lcn.lcn
+                ) AS raw_rank
+            FROM 
+                channel_mapping_tb AS cmap
+            INNER JOIN sid_tb AS sid ON cmap.sid_id = sid.sid_id
+            INNER JOIN lcn_tb AS lcn ON cmap.lcn_id = lcn.lcn_id
+            LEFT JOIN channel_master_tb AS cm ON cmap.channel_id = cm.channel_id
+            LEFT JOIN broadcaster_tb AS br ON cm.broadcaster_id = br.broadcaster_id
+            WHERE 
+                sid.city_id = $city_id
+                AND br.broadcaster <> 'LOCAL'
+        ),
+        full_data AS (
+            SELECT 
+                lcn.genre,
+                lcn.lcn,
+                cm.channelName,
+                br.broadcaster
+            FROM 
+                channel_mapping_tb AS cmap
+            INNER JOIN sid_tb AS sid ON cmap.sid_id = sid.sid_id
+            INNER JOIN lcn_tb AS lcn ON cmap.lcn_id = lcn.lcn_id
+            LEFT JOIN channel_master_tb AS cm ON cmap.channel_id = cm.channel_id
+            LEFT JOIN broadcaster_tb AS br ON cm.broadcaster_id = br.broadcaster_id
+            WHERE sid.city_id = $city_id
+        )
+        SELECT 
+            f.genre,
+            f.lcn,
+            f.channelName,
+            f.broadcaster,
+            COALESCE(r.raw_rank, 0) AS genre_rank
+        FROM full_data f
+        LEFT JOIN ranked r ON 
+            f.lcn = r.lcn AND 
+            f.channelName = r.channelName AND
+            f.broadcaster = r.broadcaster
+        ORDER BY f.lcn, genre_rank";
+
+        $result = mysqli_query($this->db, $sql);
+        if (!$result) {
+            die('Invalid query: ' . mysqli_error($this->db));
+        }
+        $rowcount=2;
+
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $spreadsheet->getProperties()->setCreator("Meghbela Digital")
+                                 ->setLastModifiedBy("Meghbela")
+                                 ->setTitle("MeghbelaLCN")
+                                 ->setSubject("Meghbela LCN")
+                                 ->setDescription("Meghbela LCN")
+                                 ->setKeywords("LCN Excel")
+                                 ->setCategory("LCN");
+        // Add Heading
+        $spreadsheet->setActiveSheetIndex(0)
+            ->setCellValue('A1', 'GENRE')
+            ->setCellValue('D1', 'LCN')
+            ->setCellValue('B1', 'CHANNEL NAME')
+            ->setCellValue('C1', 'BROADCASTER')
+            ->setCellValue('E1', 'RANK');
+        
+        while($row = mysqli_fetch_array($result)){
+            $spreadsheet->getActiveSheet()->SetCellValue('A'.$rowcount, $row['genre']);
+            $spreadsheet->getActiveSheet()->SetCellValue('D'.$rowcount, $row['lcn']);
+            $spreadsheet->getActiveSheet()->SetCellValue('B'.$rowcount, $row['channelName']);
+            $spreadsheet->getActiveSheet()->SetCellValue('C'.$rowcount, $row['broadcaster']);
+            $spreadsheet->getActiveSheet()->SetCellValue('E'.$rowcount, $row['genre_rank']);
+            $rowcount++;
+        }
+        $file_name = "LCN_Export_" . date('Y-m-d') . ".xlsx";
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename=' . $file_name);
+        header('Cache-Control: max-age=0');
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+        header('Cache-Control: cache, must-revalidate');
+        header('Pragma: public');
+        $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $writer->save('php://output');
+        exit();
+    }
+
+    public function irdChallanList()
+    {
+        $challans = [];
+        $result = $this->db->query("SELECT c.*, b.broadcaster FROM ird_challan_tb c INNER JOIN broadcaster_tb b ON c.broadcaster_id = b.broadcaster_id ORDER BY c.challan_date DESC, c.created_at DESC");
+        while ($row = $result->fetch_assoc()) {
+            $challans[] = $row;
+        }
+        require __DIR__ . '/../../views/ird_challan_list.php';
+    }
+
+    public function irdChallanAddForm()
+    {
+        $broadcasters = [];
+        $result = $this->db->query("SELECT broadcaster_id, broadcaster FROM broadcaster_tb ORDER BY broadcaster ASC");
+        while ($row = $result->fetch_assoc()) {
+            $broadcasters[] = $row;
+        }
+        require __DIR__ . '/../../views/ird_challan_add.php';
+    }
+
+    public function irdChallanAddSubmit()
+    {
+        $broadcaster_id = (int)($_POST['broadcaster_id'] ?? 0);
+        $challan_date = $_POST['challan_date'] ?? '';
+        $details = trim($_POST['details'] ?? '');
+        if (!$broadcaster_id || !$challan_date || $details === '') {
+            echo 'All fields are required.';
+            exit;
+        }
+        if (!isset($_FILES['challan_file']) || $_FILES['challan_file']['error'] !== UPLOAD_ERR_OK) {
+            echo 'File upload failed.';
+            exit;
+        }
+        $file = $_FILES['challan_file'];
+        // Validate file type and size
+        if ($file['type'] !== 'application/pdf') {
+            echo 'Only PDF files are allowed.';
+            exit;
+        }
+        if ($file['size'] > 5 * 1024 * 1024) {
+            echo 'File size exceeds 5MB.';
+            exit;
+        }
+        $uploadDir = __DIR__ . '/../../uploads/challans/';
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+        }
+        $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
+        $basename = 'challan_' . time() . '_' . bin2hex(random_bytes(4)) . '.' . $ext;
+        $targetPath = $uploadDir . $basename;
+        if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
+            echo 'Failed to save uploaded file.';
+            exit;
+        }
+        $file_path = 'uploads/challans/' . $basename;
+        $stmt = $this->db->prepare("INSERT INTO ird_challan_tb (broadcaster_id, challan_date, details, file_path, created_at, updated_at) VALUES (?, ?, ?, ?, NOW(), NOW())");
+        $stmt->bind_param('isss', $broadcaster_id, $challan_date, $details, $file_path);
+        $stmt->execute();
+        $stmt->close();
+        \App\LogHelper::log($this->db, 'Add IRD Challan', "Broadcaster $broadcaster_id, Date $challan_date, File $file_path");
+        header('Location: ' . BASE_PATH . '/ird-challan');
         exit();
     }
 } 

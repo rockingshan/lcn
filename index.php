@@ -70,6 +70,18 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) u
 
     // AJAX: Check SID uniqueness
     $r->addRoute('POST', '/ajax/check-sid', [new HomeController($auth), 'ajaxCheckSid']);
+
+    // Add Channel Mapping
+    $r->addRoute('GET', '/add-channel-mapping', [new HomeController($auth), 'addChannelMappingForm']);
+    $r->addRoute('POST', '/add-channel-mapping', [new HomeController($auth), 'addChannelMappingSubmit']);
+
+    // Export LCN Excel
+    $r->addRoute('GET', '/export-lcn', [new HomeController($auth), 'exportLcnExcel']);
+
+    // IRD Challan Details
+    $r->addRoute('GET', '/ird-challan', [new HomeController($auth), 'irdChallanList']);
+    $r->addRoute('GET', '/ird-challan/add', [new HomeController($auth), 'irdChallanAddForm']);
+    $r->addRoute('POST', '/ird-challan/add', [new HomeController($auth), 'irdChallanAddSubmit']);
 });
 
 // Fetch method and URI from somewhere
