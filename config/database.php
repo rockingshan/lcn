@@ -16,7 +16,7 @@ $db_user = $_ENV['DB_USERNAME'] ?? 'root';
 $db_pass = $_ENV['DB_PASSWORD'] ?? '';
 $db_name = $_ENV['DB_DATABASE'] ?? '';
 
-//$con = mysqli_connect($db_host, $db_user, $db_pass);
+$con = mysqli_connect($db_host, $db_user, $db_pass);
 $auth = mysqli_connect($db_host, $db_user, $db_pass, $db_name);
 
 if (!$con || !$auth) {
