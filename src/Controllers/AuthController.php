@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use App\LogHelper;
+
 class AuthController
 {
     private $db;
@@ -39,6 +41,7 @@ class AuthController
             // User found, now verify password
             if (password_verify($password, $user['pass'])) {
                 // Modern hash verification successful
+                LogHelper::log($this->db, 'Login', "User $username logged in successfully.");
                 $this->establishSession($user);
             } elseif (md5($password) === $user['pass']) {
                 // Legacy MD5 verification successful. Upgrade the hash now.
@@ -47,7 +50,7 @@ class AuthController
                 $updateStmt->bind_param("si", $newHash, $user['user_id']);
                 $updateStmt->execute();
                 $updateStmt->close();
-
+                LogHelper::log($this->db, 'Login', "User $username logged in (MD5 upgraded).");
                 $this->establishSession($user);
             } else {
                 // Both checks failed
@@ -74,6 +77,7 @@ class AuthController
 
     public function logout()
     {
+        LogHelper::log($this->db, 'Logout', 'User logged out.');
         session_unset();
         session_destroy();
         header('Location: ' . BASE_PATH . '/login');

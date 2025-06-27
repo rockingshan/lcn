@@ -33,7 +33,7 @@
                          </div>
                     </div>
                     <a href="#" class="py-5 px-3 text-gray-700 hover:text-gray-900">Broadcaster IRD Inventory</a>
-                    <a href="#" class="py-5 px-3 text-gray-700 hover:text-gray-900">Modification Logs</a>
+                    <a href="<?php echo BASE_PATH; ?>/logs" class="py-5 px-3 text-gray-700 hover:text-gray-900">View Logs</a>
                 </div>
             </div>
 

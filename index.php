@@ -48,6 +48,9 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) u
     // Swap LCN routes
     $r->addRoute('GET', '/swap-lcn/{cmap_id:\d+}', [new HomeController($auth), 'swapLcnForm']);
     $r->addRoute('POST', '/swap-lcn/{cmap_id:\d+}', [new HomeController($auth), 'swapLcnSubmit']);
+
+    // Logs page
+    $r->addRoute('GET', '/logs', [new HomeController($auth), 'logsPage']);
 });
 
 // Fetch method and URI from somewhere

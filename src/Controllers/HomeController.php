@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use App\LogHelper;
+
 class HomeController
 {
     private $db;
@@ -50,6 +52,7 @@ class HomeController
     {
         if (isset($_POST['city_id']) && in_array((int)$_POST['city_id'], [1,2,3,4])) {
             $_SESSION['city_id'] = (int)$_POST['city_id'];
+            LogHelper::log($this->db, 'Change City', 'Changed city to ID ' . $_SESSION['city_id']);
         }
         header('Location: ' . BASE_PATH . '/');
         exit();
@@ -98,10 +101,15 @@ class HomeController
             echo 'All fields are required.';
             exit;
         }
+        // Get old data for log
+        $old = $this->db->query("SELECT channelName, broadcaster_id, price FROM channel_master_tb WHERE channel_id=$channel_id")->fetch_assoc();
         $stmt = $this->db->prepare("UPDATE channel_master_tb SET channelName=?, broadcaster_id=?, price=?, updated_at=NOW() WHERE channel_id=?");
         $stmt->bind_param('sidi', $name, $broadcaster_id, $price, $channel_id);
         $stmt->execute();
         $stmt->close();
+        // Log
+        $details = "Channel ID $channel_id: Name changed from '{$old['channelName']}' to '$name', Broadcaster ID from {$old['broadcaster_id']} to $broadcaster_id, Price from {$old['price']} to $price";
+        LogHelper::log($this->db, 'Edit Channel', $details);
         header('Location: ' . BASE_PATH . '/');
         exit();
     }
@@ -142,10 +150,16 @@ class HomeController
             echo 'Invalid request.';
             exit;
         }
+        // Get old/new for log
+        $old = $this->db->query("SELECT cmap.lcn_id, lcn.lcn, cm.channelName, sid.sid FROM channel_mapping_tb cmap INNER JOIN lcn_tb lcn ON cmap.lcn_id=lcn.lcn_id LEFT JOIN channel_master_tb cm ON cmap.channel_id=cm.channel_id LEFT JOIN sid_tb sid ON cmap.sid_id=sid.sid_id WHERE cmap.cmap_id=$cmap_id")->fetch_assoc();
+        $new = $this->db->query("SELECT lcn, genre FROM lcn_tb WHERE lcn_id=$lcn_id")->fetch_assoc();
         $stmt = $this->db->prepare("UPDATE channel_mapping_tb SET lcn_id=?, updated_at=NOW() WHERE cmap_id=?");
         $stmt->bind_param('ii', $lcn_id, $cmap_id);
         $stmt->execute();
         $stmt->close();
+        // Log
+        $details = "{$old['channelName']} with SID {$old['sid']} LCN changed from {$old['lcn']} to {$new['lcn']} ({$new['genre']})";
+        LogHelper::log($this->db, 'Modify LCN', $details);
         header('Location: ' . BASE_PATH . '/');
         exit();
     }
@@ -188,22 +202,24 @@ class HomeController
             exit;
         }
         // Fetch both mappings
-        $stmt = $this->db->prepare("SELECT cmap_id, lcn_id FROM channel_mapping_tb WHERE cmap_id IN (?, ?)");
+        $stmt = $this->db->prepare("SELECT cmap_id, lcn_id, channel_id FROM channel_mapping_tb WHERE cmap_id IN (?, ?)");
         $stmt->bind_param('ii', $cmap_id, $target_cmap_id);
         $stmt->execute();
         $result = $stmt->get_result();
         $rows = [];
         while ($row = $result->fetch_assoc()) {
-            $rows[$row['cmap_id']] = $row['lcn_id'];
+            $rows[$row['cmap_id']] = $row;
         }
         $stmt->close();
         if (count($rows) !== 2) {
             echo 'Invalid mapping selection.';
             exit;
         }
-        // Swap lcn_id values
-        $lcn_id_1 = $rows[$cmap_id];
-        $lcn_id_2 = $rows[$target_cmap_id];
+        $lcn_id_1 = $rows[$cmap_id]['lcn_id'];
+        $lcn_id_2 = $rows[$target_cmap_id]['lcn_id'];
+        // Get channel names for log
+        $c1 = $this->db->query("SELECT cm.channelName, sid.sid FROM channel_mapping_tb cmap LEFT JOIN channel_master_tb cm ON cmap.channel_id=cm.channel_id LEFT JOIN sid_tb sid ON cmap.sid_id=sid.sid_id WHERE cmap.cmap_id=$cmap_id")->fetch_assoc();
+        $c2 = $this->db->query("SELECT cm.channelName, sid.sid FROM channel_mapping_tb cmap LEFT JOIN channel_master_tb cm ON cmap.channel_id=cm.channel_id LEFT JOIN sid_tb sid ON cmap.sid_id=sid.sid_id WHERE cmap.cmap_id=$target_cmap_id")->fetch_assoc();
         // Update both records
         $stmt1 = $this->db->prepare("UPDATE channel_mapping_tb SET lcn_id=?, updated_at=NOW() WHERE cmap_id=?");
         $stmt1->bind_param('ii', $lcn_id_2, $cmap_id);
@@ -213,7 +229,26 @@ class HomeController
         $stmt2->bind_param('ii', $lcn_id_1, $target_cmap_id);
         $stmt2->execute();
         $stmt2->close();
+        // Log
+        $details = "Swapped LCN between {$c1['channelName']} (SID {$c1['sid']}) and {$c2['channelName']} (SID {$c2['sid']})";
+        LogHelper::log($this->db, 'Swap LCN', $details);
         header('Location: ' . BASE_PATH . '/');
         exit();
+    }
+
+    public function logsPage()
+    {
+        $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+        $perPage = 25;
+        $offset = ($page - 1) * $perPage;
+        $logs = [];
+        $result = $this->db->query("SELECT * FROM activity_log ORDER BY created_at DESC LIMIT $perPage OFFSET $offset");
+        while ($row = $result->fetch_assoc()) {
+            $logs[] = $row;
+        }
+        // Get total count for pagination
+        $total = $this->db->query("SELECT COUNT(*) as cnt FROM activity_log")->fetch_assoc()['cnt'];
+        $totalPages = ceil($total / $perPage);
+        require __DIR__ . '/../../views/logs.php';
     }
 } 
