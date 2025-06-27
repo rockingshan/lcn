@@ -33,7 +33,7 @@ class HomeController
         LEFT JOIN channel_master_tb AS cm ON cmap.channel_id = cm.channel_id
         LEFT JOIN broadcaster_tb AS br ON cm.broadcaster_id = br.broadcaster_id
         WHERE 
-            sid.city_id = $city_id";
+            sid.city_id = $city_id ORDER BY lcn.lcn ASC";
 
         $result = mysqli_query($this->db, $sql);
         if (!$result) {
@@ -146,6 +146,73 @@ class HomeController
         $stmt->bind_param('ii', $lcn_id, $cmap_id);
         $stmt->execute();
         $stmt->close();
+        header('Location: ' . BASE_PATH . '/');
+        exit();
+    }
+
+    public function swapLcnForm($cmap_id)
+    {
+        $cmap_id = (int)$cmap_id;
+        if (!$cmap_id) {
+            http_response_code(404);
+            echo 'Mapping not found.';
+            exit;
+        }
+        // Get current mapping with channel info
+        $stmt = $this->db->prepare("SELECT cmap.cmap_id, cmap.lcn_id, sid.sid, lcn.lcn, lcn.genre, cm.channelName, sid.city_id FROM channel_mapping_tb AS cmap INNER JOIN sid_tb AS sid ON cmap.sid_id = sid.sid_id INNER JOIN lcn_tb AS lcn ON cmap.lcn_id = lcn.lcn_id LEFT JOIN channel_master_tb AS cm ON cmap.channel_id = cm.channel_id WHERE cmap.cmap_id = ?");
+        $stmt->bind_param('i', $cmap_id);
+        $stmt->execute();
+        $mapping = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        if (!$mapping) {
+            http_response_code(404);
+            echo 'Mapping not found.';
+            exit;
+        }
+        // Get all other mappings for the same city (exclude itself)
+        $city_id = (int)$mapping['city_id'];
+        $others = [];
+        $result = $this->db->query("SELECT cmap.cmap_id, lcn.lcn, lcn.genre, cm.channelName FROM channel_mapping_tb AS cmap INNER JOIN sid_tb AS sid ON cmap.sid_id = sid.sid_id INNER JOIN lcn_tb AS lcn ON cmap.lcn_id = lcn.lcn_id LEFT JOIN channel_master_tb AS cm ON cmap.channel_id = cm.channel_id WHERE sid.city_id = $city_id AND cmap.cmap_id != $cmap_id ORDER BY lcn.lcn ASC");
+        while ($row = $result->fetch_assoc()) {
+            $others[] = $row;
+        }
+        require __DIR__ . '/../../views/swap_lcn.php';
+    }
+
+    public function swapLcnSubmit($cmap_id)
+    {
+        $cmap_id = (int)$cmap_id;
+        $target_cmap_id = (int)($_POST['target_cmap_id'] ?? 0);
+        if (!$cmap_id || !$target_cmap_id || $cmap_id === $target_cmap_id) {
+            echo 'Invalid request.';
+            exit;
+        }
+        // Fetch both mappings
+        $stmt = $this->db->prepare("SELECT cmap_id, lcn_id FROM channel_mapping_tb WHERE cmap_id IN (?, ?)");
+        $stmt->bind_param('ii', $cmap_id, $target_cmap_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $rows = [];
+        while ($row = $result->fetch_assoc()) {
+            $rows[$row['cmap_id']] = $row['lcn_id'];
+        }
+        $stmt->close();
+        if (count($rows) !== 2) {
+            echo 'Invalid mapping selection.';
+            exit;
+        }
+        // Swap lcn_id values
+        $lcn_id_1 = $rows[$cmap_id];
+        $lcn_id_2 = $rows[$target_cmap_id];
+        // Update both records
+        $stmt1 = $this->db->prepare("UPDATE channel_mapping_tb SET lcn_id=?, updated_at=NOW() WHERE cmap_id=?");
+        $stmt1->bind_param('ii', $lcn_id_2, $cmap_id);
+        $stmt1->execute();
+        $stmt1->close();
+        $stmt2 = $this->db->prepare("UPDATE channel_mapping_tb SET lcn_id=?, updated_at=NOW() WHERE cmap_id=?");
+        $stmt2->bind_param('ii', $lcn_id_1, $target_cmap_id);
+        $stmt2->execute();
+        $stmt2->close();
         header('Location: ' . BASE_PATH . '/');
         exit();
     }

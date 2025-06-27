@@ -35,6 +35,7 @@ require_once __DIR__ . '/partials/header.php';
                     <td class="text-left py-3 px-4 space-x-2">
                         <a href="<?php echo BASE_PATH; ?>/edit-channel/<?php echo urlencode($row['channel_id']); ?>" class="inline-block px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-xs font-semibold">Edit Channel</a>
                         <a href="<?php echo BASE_PATH; ?>/modify-lcn/<?php echo urlencode($row['cmap_id']); ?>" class="inline-block px-3 py-1 bg-yellow-400 text-gray-900 rounded hover:bg-yellow-500 text-xs font-semibold">Modify LCN</a>
+                        <a href="<?php echo BASE_PATH; ?>/swap-lcn/<?php echo urlencode($row['cmap_id']); ?>" class="inline-block px-3 py-1 bg-purple-500 text-white rounded hover:bg-purple-600 text-xs font-semibold">Swap LCN</a>
                         <a href="#" class="inline-block px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 text-xs font-semibold">Update IRD</a>
                     </td>
                   </tr>

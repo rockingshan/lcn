@@ -44,6 +44,10 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) u
     // Modify LCN routes
     $r->addRoute('GET', '/modify-lcn/{cmap_id:\d+}', [new HomeController($auth), 'modifyLcnForm']);
     $r->addRoute('POST', '/modify-lcn/{cmap_id:\d+}', [new HomeController($auth), 'modifyLcnSubmit']);
+
+    // Swap LCN routes
+    $r->addRoute('GET', '/swap-lcn/{cmap_id:\d+}', [new HomeController($auth), 'swapLcnForm']);
+    $r->addRoute('POST', '/swap-lcn/{cmap_id:\d+}', [new HomeController($auth), 'swapLcnSubmit']);
 });
 
 // Fetch method and URI from somewhere
