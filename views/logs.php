@@ -34,10 +34,39 @@ require_once __DIR__ . '/partials/header.php';
         </table>
     </div>
     <!-- Pagination -->
-    <div class="flex justify-center mt-6 space-x-2">
-        <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-            <a href="<?php echo BASE_PATH; ?>/logs?page=<?php echo $i; ?>" class="px-3 py-1 rounded <?php echo $i == $page ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-800 hover:bg-gray-300'; ?>"><?php echo $i; ?></a>
-        <?php endfor; ?>
+    <div class="flex justify-center mt-6 space-x-1 flex-wrap">
+        <?php
+        $range = 2; // How many pages to show on each side of current
+        $showFirstLast = true;
+        $showPrevNext = true;
+        $ellipsis = false;
+
+        if ($totalPages > 1) {
+            if ($showFirstLast && $page > 1) {
+                echo '<a href="' . BASE_PATH . '/logs?page=1" class="px-3 py-1 rounded bg-gray-200 text-gray-800 hover:bg-gray-300">First</a>';
+            }
+            if ($showPrevNext && $page > 1) {
+                echo '<a href="' . BASE_PATH . '/logs?page=' . ($page - 1) . '" class="px-3 py-1 rounded bg-gray-200 text-gray-800 hover:bg-gray-300">Prev</a>';
+            }
+            for ($i = 1; $i <= $totalPages; $i++) {
+                if ($i == 1 || $i == $totalPages || ($i >= $page - $range && $i <= $page + $range)) {
+                    if ($ellipsis) {
+                        echo '<span class="px-3 py-1">...</span>';
+                        $ellipsis = false;
+                    }
+                    echo '<a href="' . BASE_PATH . '/logs?page=' . $i . '" class="px-3 py-1 rounded ' . ($i == $page ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-800 hover:bg-gray-300') . '">' . $i . '</a>';
+                } elseif (!$ellipsis) {
+                    $ellipsis = true;
+                }
+            }
+            if ($showPrevNext && $page < $totalPages) {
+                echo '<a href="' . BASE_PATH . '/logs?page=' . ($page + 1) . '" class="px-3 py-1 rounded bg-gray-200 text-gray-800 hover:bg-gray-300">Next</a>';
+            }
+            if ($showFirstLast && $page < $totalPages) {
+                echo '<a href="' . BASE_PATH . '/logs?page=' . $totalPages . '" class="px-3 py-1 rounded bg-gray-200 text-gray-800 hover:bg-gray-300">Last</a>';
+            }
+        }
+        ?>
     </div>
 </div>
 <?php require_once __DIR__ . '/partials/footer.php'; ?> 
