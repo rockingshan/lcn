@@ -10,7 +10,7 @@
 $title = 'Broadcaster IRD Inventory';
 require_once __DIR__ . '/partials/header.php'; 
 ?>
-<div class="max-w-5xl mx-auto bg-white p-8 rounded shadow">
+<div class="max-w-7xl mx-auto bg-white p-8 rounded shadow">
     <h2 class="text-2xl font-bold mb-6">Broadcaster IRD Inventory</h2>
     <div class="mb-4 flex justify-between items-center">
         <input type="text" id="searchInput" onkeyup="searchIrdTable()" placeholder="Search inventory..." class="p-2 border border-gray-300 rounded-md w-full md:w-1/3">
@@ -22,15 +22,15 @@ require_once __DIR__ . '/partials/header.php';
         </div>
     </div>
     <div class="overflow-x-auto">
-        <table id="irdTable" class="min-w-full bg-white border border-gray-200">
+        <table id="irdTable" class="w-full bg-white border border-gray-200">
             <thead class="bg-gray-800 text-white">
                 <tr>
-                    <th class="py-2 px-3 text-left cursor-pointer" onclick="sortIrdTable(0)">Channel Name</th>
-                    <th class="py-2 px-3 text-left cursor-pointer" onclick="sortIrdTable(1)">Broadcaster</th>
-                    <th class="py-2 px-3 text-left cursor-pointer" onclick="sortIrdTable(2)">STB Number</th>
-                    <th class="py-2 px-3 text-left cursor-pointer" onclick="sortIrdTable(3)">VC Number</th>
-                    <th class="py-2 px-3 text-left cursor-pointer" onclick="sortIrdTable(4)">Last Updated</th>
-                    <th class="py-2 px-3 text-left">Actions</th>
+                    <th class="py-2 px-3 text-left cursor-pointer w-1/5" onclick="sortIrdTable(0)">Channel Name</th>
+                    <th class="py-2 px-3 text-left cursor-pointer w-1/6" onclick="sortIrdTable(1)">Broadcaster</th>
+                    <th class="py-2 px-3 text-left cursor-pointer w-1/5" onclick="sortIrdTable(2)">STB Number</th>
+                    <th class="py-2 px-3 text-left cursor-pointer w-1/6" onclick="sortIrdTable(3)">VC Number</th>
+                    <th class="py-2 px-3 text-left cursor-pointer w-1/6" onclick="sortIrdTable(4)">Last Updated</th>
+                    <th class="py-2 px-3 text-left w-1/6">Actions</th>
                 </tr>
             </thead>
             <tbody class="text-gray-700">
@@ -38,14 +38,16 @@ require_once __DIR__ . '/partials/header.php';
                 <tr class="border-b border-gray-100 hover:bg-gray-50">
                     <td class="py-2 px-3"><?php echo htmlspecialchars($row['channelName']); ?></td>
                     <td class="py-2 px-3"><?php echo htmlspecialchars($row['broadcaster']); ?></td>
-                    <td class="py-2 px-3"><?php echo htmlspecialchars($row['stbNum']); ?></td>
+                    <td class="py-2 px-3 break-all"><?php echo htmlspecialchars($row['stbNum']); ?></td>
                     <td class="py-2 px-3"><?php echo htmlspecialchars($row['vcNum']); ?></td>
                     <td class="py-2 px-3"><?php echo htmlspecialchars($row['updated_at'] ?? 'N/A'); ?></td>
-                    <td class="py-2 px-3 space-x-2">
-                        <a href="<?php echo BASE_PATH; ?>/ird-inventory/edit/<?php echo urlencode($row['ird_id']); ?>" class="inline-block px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-xs font-semibold">Edit</a>
-                        <form action="<?php echo BASE_PATH; ?>/ird-inventory/delete/<?php echo urlencode($row['ird_id']); ?>" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this IRD entry?');">
-                            <button type="submit" class="inline-block px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-xs font-semibold">Delete</button>
-                        </form>
+                    <td class="py-2 px-3">
+                        <div class="flex space-x-1">
+                            <a href="<?php echo BASE_PATH; ?>/ird-inventory/edit/<?php echo urlencode($row['ird_id']); ?>" class="inline-block px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-xs font-semibold whitespace-nowrap">Edit</a>
+                            <form action="<?php echo BASE_PATH; ?>/ird-inventory/delete/<?php echo urlencode($row['ird_id']); ?>" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this IRD entry?');">
+                                <button type="submit" class="inline-block px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-xs font-semibold whitespace-nowrap">Delete</button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
                 <?php endforeach; ?>
