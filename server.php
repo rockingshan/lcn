@@ -1,6 +1,11 @@
 <?php
-
-// server.php - Robust router for PHP's built-in development server
+/*
+ * server.php - Static file/dev server router for LCN Management System
+ *
+ * - Used with PHP's built-in server for local development.
+ * - Serves static files from /public if they exist.
+ * - Otherwise, routes all requests to index.php (the front controller).
+ */
 
 $uri = urldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
 

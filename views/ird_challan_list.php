@@ -1,4 +1,12 @@
 <?php 
+/*
+ * views/ird_challan_list.php
+ *
+ * Lists all IRD Challan records with broadcaster, date, details, and PDF file link.
+ * Receives $challans (array of challan records with broadcaster name)
+ * Button to add a new challan.
+ * Uses Tailwind CSS for styling.
+ */
 $title = 'IRD Challan Details';
 require_once __DIR__ . '/partials/header.php'; 
 ?>

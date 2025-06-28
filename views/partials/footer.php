@@ -1,3 +1,11 @@
+<?php 
+/*
+ * views/partials/footer.php
+ *
+ * Footer partial for all pages.
+ * - Renders copyright and footer.
+ * - Uses Tailwind CSS for styling.
+ */
 </main> <!-- closes the main tag from the header -->
 
 <footer class="bg-gray-800 text-white text-center p-4 fixed bottom-0 w-full">

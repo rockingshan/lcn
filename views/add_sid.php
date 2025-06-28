@@ -1,4 +1,12 @@
 <?php 
+/*
+ * views/add_sid.php
+ *
+ * Form to add a new SID for the current city.
+ * Fields: SID (with AJAX uniqueness check), TS, Frequency, SID Hex (auto-calculated)
+ * City is auto-selected from session.
+ * Uses Tailwind CSS for styling.
+ */
 $title = 'Add SID';
 require_once __DIR__ . '/partials/header.php'; 
 $city_id = isset($_SESSION['city_id']) ? (int)$_SESSION['city_id'] : 1;

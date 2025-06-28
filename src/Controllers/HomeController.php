@@ -1,4 +1,12 @@
 <?php
+/**
+ * HomeController.php
+ *
+ * Main controller for all business logic and page rendering in the LCN Management System.
+ * Handles dashboard, CRUD for channels, SIDs, LCNs, IRD inventory, channel mapping, logs, and IRD Challan uploads.
+ *
+ * Each method is documented with its purpose and any important queries.
+ */
 
 namespace App\Controllers;
 
@@ -13,6 +21,13 @@ class HomeController
         $this->db = $db;
     }
 
+    /**
+     * index()
+     * Dashboard page. Lists all channel mappings for the current city.
+     * Joins channel_mapping_tb, sid_tb, lcn_tb, channel_master_tb, broadcaster_tb, and ird_mapping_tb.
+     *
+     * Query: See method body for full SQL.
+     */
     public function index()
     {
         // Use city_id from session, default to 1
@@ -50,6 +65,10 @@ class HomeController
         require_once __DIR__ . '/../../views/dashboard.php';
     }
 
+    /**
+     * setCity()
+     * Sets the current city in session and logs the change.
+     */
     public function setCity()
     {
         if (isset($_POST['city_id']) && in_array((int)$_POST['city_id'], [1,2,3,4])) {
@@ -60,6 +79,10 @@ class HomeController
         exit();
     }
 
+    /**
+     * editChannelForm($channel_id)
+     * Shows the edit form for a channel. Fetches channel and all broadcasters.
+     */
     public function editChannelForm($channel_id)
     {
         $channel_id = (int)$channel_id;
@@ -88,6 +111,10 @@ class HomeController
         require __DIR__ . '/../../views/edit_channel.php';
     }
 
+    /**
+     * editChannelSubmit($channel_id)
+     * Handles channel edit form submission. Updates channel_master_tb and logs changes.
+     */
     public function editChannelSubmit($channel_id)
     {
         $channel_id = (int)$channel_id;
@@ -116,6 +143,10 @@ class HomeController
         exit();
     }
 
+    /**
+     * modifyLcnForm($cmap_id)
+     * Shows the form to modify LCN for a channel mapping. Fetches mapping and available blank LCNs.
+     */
     public function modifyLcnForm($cmap_id)
     {
         $cmap_id = (int)$cmap_id;
@@ -144,6 +175,10 @@ class HomeController
         require __DIR__ . '/../../views/modify_lcn.php';
     }
 
+    /**
+     * modifyLcnSubmit($cmap_id)
+     * Handles LCN modification. Updates channel_mapping_tb and logs the change.
+     */
     public function modifyLcnSubmit($cmap_id)
     {
         $cmap_id = (int)$cmap_id;
@@ -166,6 +201,10 @@ class HomeController
         exit();
     }
 
+    /**
+     * swapLcnForm($cmap_id)
+     * Shows the form to swap LCNs between two channels in the same city.
+     */
     public function swapLcnForm($cmap_id)
     {
         $cmap_id = (int)$cmap_id;
@@ -195,6 +234,10 @@ class HomeController
         require __DIR__ . '/../../views/swap_lcn.php';
     }
 
+    /**
+     * swapLcnSubmit($cmap_id)
+     * Handles LCN swap. Updates both mappings and logs the swap.
+     */
     public function swapLcnSubmit($cmap_id)
     {
         $cmap_id = (int)$cmap_id;
@@ -238,6 +281,10 @@ class HomeController
         exit();
     }
 
+    /**
+     * logsPage()
+     * Shows the paginated activity log.
+     */
     public function logsPage()
     {
         $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
@@ -254,6 +301,10 @@ class HomeController
         require __DIR__ . '/../../views/logs.php';
     }
 
+    /**
+     * irdInventoryPage()
+     * Lists all IRD inventory for the current city.
+     */
     public function irdInventoryPage()
     {
         $city_id = isset($_SESSION['city_id']) ? (int)$_SESSION['city_id'] : 1;
@@ -265,6 +316,10 @@ class HomeController
         require __DIR__ . '/../../views/ird_inventory.php';
     }
 
+    /**
+     * irdAddForm()
+     * Shows the form to add a new IRD entry. Fetches channels and broadcasters.
+     */
     public function irdAddForm()
     {
         // Get channels and broadcasters for dropdowns
@@ -281,6 +336,10 @@ class HomeController
         require __DIR__ . '/../../views/ird_add.php';
     }
 
+    /**
+     * irdAddSubmit()
+     * Handles IRD add form submission. Inserts into ird_mapping_tb and logs the action.
+     */
     public function irdAddSubmit()
     {
         $city_id = isset($_SESSION['city_id']) ? (int)$_SESSION['city_id'] : 1;
@@ -301,6 +360,10 @@ class HomeController
         exit();
     }
 
+    /**
+     * irdEditForm($ird_id)
+     * Shows the form to edit an IRD entry. Fetches entry, channels, and broadcasters.
+     */
     public function irdEditForm($ird_id)
     {
         $ird_id = (int)$ird_id;
@@ -326,6 +389,10 @@ class HomeController
         require __DIR__ . '/../../views/ird_edit.php';
     }
 
+    /**
+     * irdEditSubmit($ird_id)
+     * Handles IRD edit form submission. Updates ird_mapping_tb and logs the action.
+     */
     public function irdEditSubmit($ird_id)
     {
         $ird_id = (int)$ird_id;
@@ -346,6 +413,10 @@ class HomeController
         exit();
     }
 
+    /**
+     * irdDelete($ird_id)
+     * Deletes an IRD entry and logs the action.
+     */
     public function irdDelete($ird_id)
     {
         $ird_id = (int)$ird_id;
@@ -358,11 +429,19 @@ class HomeController
         exit();
     }
 
+    /**
+     * addSidForm()
+     * Shows the form to add a new SID.
+     */
     public function addSidForm()
     {
         require __DIR__ . '/../../views/add_sid.php';
     }
 
+    /**
+     * addSidSubmit()
+     * Handles SID add form submission. Inserts into sid_tb and logs the action.
+     */
     public function addSidSubmit()
     {
         $sid = (int)($_POST['sid'] ?? 0);
@@ -383,6 +462,10 @@ class HomeController
         exit();
     }
 
+    /**
+     * addChannelForm()
+     * Shows the form to add a new channel. Fetches broadcasters.
+     */
     public function addChannelForm()
     {
         $broadcasters = [];
@@ -393,6 +476,10 @@ class HomeController
         require __DIR__ . '/../../views/add_channel.php';
     }
 
+    /**
+     * addChannelSubmit()
+     * Handles channel add form submission. Inserts into channel_master_tb and logs the action.
+     */
     public function addChannelSubmit()
     {
         $name = trim($_POST['channelName'] ?? '');
@@ -411,6 +498,10 @@ class HomeController
         exit();
     }
 
+    /**
+     * ajaxCheckSid()
+     * AJAX endpoint to check if a SID exists for the current city. Returns JSON.
+     */
     public function ajaxCheckSid()
     {
         header('Content-Type: application/json');
@@ -425,6 +516,10 @@ class HomeController
         exit();
     }
 
+    /**
+     * addChannelMappingForm()
+     * Shows the form to add a new channel mapping. Fetches blank SIDs, blank LCNs, and channels.
+     */
     public function addChannelMappingForm()
     {
         $city_id = isset($_SESSION['city_id']) ? (int)$_SESSION['city_id'] : 1;
@@ -449,6 +544,10 @@ class HomeController
         require __DIR__ . '/../../views/add_channel_mapping.php';
     }
 
+    /**
+     * addChannelMappingSubmit()
+     * Handles channel mapping add form submission. Inserts into channel_mapping_tb and logs the action.
+     */
     public function addChannelMappingSubmit()
     {
         $sid_id = (int)($_POST['sid_id'] ?? 0);
@@ -473,6 +572,10 @@ class HomeController
         exit();
     }
 
+    /**
+     * exportLcnExcel()
+     * Exports the LCN mapping as an Excel file using PhpSpreadsheet. Uses a custom SQL query.
+     */
     public function exportLcnExcel()
     {
         require_once __DIR__ . '/../../vendor/autoload.php';
@@ -567,6 +670,10 @@ class HomeController
         exit();
     }
 
+    /**
+     * irdChallanList()
+     * Lists all IRD challans with broadcaster, date, details, and file link.
+     */
     public function irdChallanList()
     {
         $challans = [];
@@ -577,6 +684,10 @@ class HomeController
         require __DIR__ . '/../../views/ird_challan_list.php';
     }
 
+    /**
+     * irdChallanAddForm()
+     * Shows the form to add a new IRD challan. Fetches broadcasters.
+     */
     public function irdChallanAddForm()
     {
         $broadcasters = [];
@@ -587,6 +698,10 @@ class HomeController
         require __DIR__ . '/../../views/ird_challan_add.php';
     }
 
+    /**
+     * irdChallanAddSubmit()
+     * Handles IRD challan add form submission. Validates and uploads PDF, inserts record, logs action.
+     */
     public function irdChallanAddSubmit()
     {
         $broadcaster_id = (int)($_POST['broadcaster_id'] ?? 0);

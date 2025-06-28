@@ -1,4 +1,11 @@
 <?php 
+/*
+ * views/add_channel_mapping.php
+ *
+ * Form to add a new channel mapping (SID to LCN, optional channel name) for the current city.
+ * Fields: SID (dropdown, only unmapped), LCN (dropdown, only unmapped), Channel Name (optional)
+ * Uses Tailwind CSS for styling.
+ */
 $title = 'Add Channel Mapping';
 require_once __DIR__ . '/partials/header.php'; 
 ?>

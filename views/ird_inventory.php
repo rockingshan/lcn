@@ -1,4 +1,12 @@
 <?php 
+/*
+ * views/ird_inventory.php
+ *
+ * Lists all IRD inventory records for the current city.
+ * Receives $inventory (array of IRD records with channel, broadcaster, STB/VC numbers, last updated)
+ * Searchable and sortable table. Action buttons for Edit/Delete.
+ * Uses Tailwind CSS for styling.
+ */
 $title = 'Broadcaster IRD Inventory';
 require_once __DIR__ . '/partials/header.php'; 
 ?>

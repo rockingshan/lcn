@@ -1,5 +1,13 @@
 <?php
-// index.php - Front Controller
+/*
+ * index.php - Front Controller for LCN Management System
+ *
+ * - All web requests are routed through this file.
+ * - Handles authentication middleware (login required for all pages except /login).
+ * - Uses FastRoute for routing URLs to controller methods.
+ * - Loads Composer autoload, app config, and DB connection.
+ * - Handles 404/405 errors and loads the correct controller/view.
+ */
 session_start();
 
 require_once __DIR__ . '/vendor/autoload.php';

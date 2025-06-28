@@ -14,7 +14,7 @@
 </head>
 <body class="bg-gray-100 text-gray-800 pb-16">
 
-<nav class="bg-white shadow-md">
+<nav class="bg-white/30 backdrop-blur-lg border-b border-gray-200 shadow-lg">
     <div class="max-w-7xl mx-auto px-4">
         <div class="flex justify-between items-center h-16">
             <!-- Left Side -->

@@ -1,4 +1,11 @@
 <?php
+// config/database.php
+//
+// Loads database credentials from .env using phpdotenv.
+// Provides $con (general connection) and $auth (authenticated DB connection).
+// Used throughout the app for all DB queries.
+//
+// Usage: require_once __DIR__ . '/../config/database.php';
 
 require_once __DIR__ . '/../vendor/autoload.php';
 

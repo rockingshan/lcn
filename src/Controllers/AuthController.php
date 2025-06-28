@@ -1,4 +1,12 @@
 <?php
+/**
+ * AuthController.php
+ *
+ * Handles authentication: login, logout, and session management for the LCN Management System.
+ * - Uses bcrypt for password hashing (upgrades legacy MD5 on login)
+ * - Logs all login/logout actions
+ * - Establishes user session
+ */
 
 namespace App\Controllers;
 
@@ -13,12 +21,20 @@ class AuthController
         $this->db = $db;
     }
 
+    /**
+     * showLoginForm($error = null)
+     * Shows the login form, optionally with an error message.
+     */
     public function showLoginForm($error = null)
     {
         // This allows us to pass an error message to the view
         require_once __DIR__ . '/../../views/login.php';
     }
 
+    /**
+     * login()
+     * Handles login form submission. Verifies password, upgrades MD5 hashes, logs in user.
+     */
     public function login()
     {
         $username = $_POST['username'] ?? '';
@@ -62,6 +78,10 @@ class AuthController
         }
     }
     
+    /**
+     * establishSession($user)
+     * Sets session variables for the logged-in user and redirects to dashboard.
+     */
     private function establishSession($user)
     {
         // Regenerate session ID to prevent session fixation
@@ -75,6 +95,10 @@ class AuthController
         exit();
     }
 
+    /**
+     * logout()
+     * Logs out the user, destroys session, and logs the action.
+     */
     public function logout()
     {
         LogHelper::log($this->db, 'Logout', 'User logged out.');

@@ -1,4 +1,13 @@
 <?php 
+/*
+ * views/dashboard.php
+ *
+ * Dashboard view for LCN Management System.
+ * - Receives $channels (array of channel mappings for the current city)
+ * - Renders a searchable, sortable table of all channel mappings
+ * - Action buttons for Edit Channel, Modify LCN, Swap LCN, Update/Add IRD
+ * - Uses Tailwind CSS for styling
+ */
 $title = 'Dashboard - LCN Management';
 require_once __DIR__ . '/partials/header.php'; 
 ?>

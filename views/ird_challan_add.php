@@ -1,4 +1,11 @@
 <?php 
+/*
+ * views/ird_challan_add.php
+ *
+ * Form to add a new IRD Challan record.
+ * Fields: Broadcaster (dropdown), Date, Details (textarea), PDF file upload (max 5MB, PDF only)
+ * Uses Tailwind CSS for styling.
+ */
 $title = 'Add IRD Challan';
 require_once __DIR__ . '/partials/header.php'; 
 ?>
