@@ -18,20 +18,20 @@
     <div class="max-w-7xl mx-auto px-4">
         <div class="flex justify-between items-center h-16">
             <!-- Left Side -->
-            <div class="flex items-center space-x-4">
+            <div class="flex items-start space-x-4">
                 <!-- Logo -->
                 <a href="<?php echo BASE_PATH; ?>/" class="flex items-center py-5 px-2 text-gray-700 hover:text-gray-900">
                     <span class="font-bold">Meghbela LCN</span>
                 </a>
                 <!-- Primary Nav -->
                 <div class="hidden md:flex items-center space-x-1">
-                    <div class="relative group">
+                    <!--<div class="relative group">
                          <a href="#" class="py-5 px-3 text-gray-700 hover:text-gray-900">Downloads <i class="fas fa-chevron-down fa-xs"></i></a>
                          <div class="absolute hidden group-hover:block bg-white shadow-lg rounded-md mt-0 pt-2 w-48 z-10">
                             <a href="<?php echo BASE_PATH; ?>/export-lcn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Download LCN</a>
                             <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Download Master LCN</a>
                          </div>
-                    </div>
+                    </div>-->
                     <a href="<?php echo BASE_PATH; ?>/ird-inventory" class="py-5 px-3 text-gray-700 hover:text-gray-900">Broadcaster IRD Inventory</a>
                     <a href="<?php echo BASE_PATH; ?>/ird-challan" class="py-5 px-3 text-gray-700 hover:text-gray-900">IRD Challan Details</a>
                     <a href="<?php echo BASE_PATH; ?>/logs" class="py-5 px-3 text-gray-700 hover:text-gray-900">View Logs</a>
@@ -87,7 +87,7 @@
     
     <!-- Mobile Menu -->
     <div class="mobile-menu hidden md:hidden">
-        <a href="#" class="block py-2 px-4 text-sm hover:bg-gray-200">Downloads</a>
+        <!--<a href="#" class="block py-2 px-4 text-sm hover:bg-gray-200">Downloads</a> -->
         <a href="#" class="block py-2 px-4 text-sm hover:bg-gray-200">Broadcaster IRD Inventory</a>
         <a href="#" class="block py-2 px-4 text-sm hover:bg-gray-200">Modification Logs</a>
         <hr/>

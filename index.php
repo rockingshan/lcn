@@ -86,6 +86,15 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) u
     // Export LCN Excel
     $r->addRoute('GET', '/export-lcn', [new HomeController($auth), 'exportLcnExcel']);
 
+    // Export IRD Inventory Excel
+    $r->addRoute('GET', '/export-ird-inventory', [new HomeController($auth), 'exportIrdInventoryExcel']);
+
+    // Export Logs Excel
+    $r->addRoute('GET', '/export-logs', [new HomeController($auth), 'exportLogsExcel']);
+
+    // Export IRD Challan Excel
+    $r->addRoute('GET', '/export-ird-challan', [new HomeController($auth), 'exportIrdChallanExcel']);
+
     // IRD Challan Details
     $r->addRoute('GET', '/ird-challan', [new HomeController($auth), 'irdChallanList']);
     $r->addRoute('GET', '/ird-challan/add', [new HomeController($auth), 'irdChallanAddForm']);

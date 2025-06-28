@@ -4,6 +4,11 @@ require_once __DIR__ . '/partials/header.php';
 ?>
 <div class="max-w-5xl mx-auto bg-white p-8 rounded shadow">
     <h2 class="text-2xl font-bold mb-6">Activity Logs</h2>
+    <div class="mb-4 flex justify-end">
+        <a href="<?php echo BASE_PATH; ?>/export-logs" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 flex items-center">
+            <i class="fas fa-file-excel mr-2"></i>Download Excel
+        </a>
+    </div>
     <div class="overflow-x-auto">
         <table class="min-w-full bg-white border border-gray-200">
             <thead class="bg-gray-800 text-white">

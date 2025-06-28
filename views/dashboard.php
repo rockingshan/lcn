@@ -13,8 +13,11 @@ require_once __DIR__ . '/partials/header.php';
 ?>
 
 <div class="bg-white p-6 rounded-lg shadow-lg">
-    <div class="mb-4">
+    <div class="mb-4 flex justify-between items-center">
         <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Search for channels..." class="p-2 border border-gray-300 rounded-md w-full md:w-1/3">
+        <a href="<?php echo BASE_PATH; ?>/export-lcn" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 flex items-center">
+            <i class="fas fa-file-excel mr-2"></i>Download Excel
+        </a>
     </div>
 
     <div class="overflow-x-auto">

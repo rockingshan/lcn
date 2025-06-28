@@ -33,6 +33,14 @@ class HomeController
         // Use city_id from session, default to 1
         $city_id = isset($_SESSION['city_id']) ? (int)$_SESSION['city_id'] : 1;
         
+        // Fetch city name and set as global variable for export functions
+        $city_result = $this->db->query("SELECT city_name FROM city_tb WHERE city_id = $city_id");
+        $city_name = 'Kolkata'; // Default fallback
+        if ($city_result && $city_result->num_rows > 0) {
+            $city_name = $city_result->fetch_assoc()['city_name'];
+        }
+        $GLOBALS['city_name'] = $city_name;
+        
         $sql = "SELECT 
             cmap.cmap_id,
             lcn.genre,
@@ -60,6 +68,7 @@ class HomeController
         }
 
         $channels = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
 
         // Load the view and pass the data to it
         require_once __DIR__ . '/../../views/dashboard.php';
@@ -573,6 +582,26 @@ class HomeController
     }
 
     /**
+     * getCityName()
+     * Helper function to get current city name with fallback
+     */
+    private function getCityName()
+    {
+        if (isset($GLOBALS['city_name'])) {
+            return $GLOBALS['city_name'];
+        }
+        
+        // Fallback: fetch from database
+        $city_id = isset($_SESSION['city_id']) ? (int)$_SESSION['city_id'] : 1;
+        $city_result = $this->db->query("SELECT city_name FROM city_tb WHERE city_id = $city_id");
+        $city_name = 'Kolkata'; // Default fallback
+        if ($city_result && $city_result->num_rows > 0) {
+            $city_name = $city_result->fetch_assoc()['city_name'];
+        }
+        return $city_name;
+    }
+
+    /**
      * exportLcnExcel()
      * Exports the LCN mapping as an Excel file using PhpSpreadsheet. Uses a custom SQL query.
      */
@@ -657,7 +686,201 @@ class HomeController
             $spreadsheet->getActiveSheet()->SetCellValue('E'.$rowcount, $row['genre_rank']);
             $rowcount++;
         }
-        $file_name = "LCN_Export_" . date('Y-m-d') . ".xlsx";
+        $file_name = $this->getCityName() . "_LCN_Export_" . date('Y-m-d') . ".xlsx";
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename=' . $file_name);
+        header('Cache-Control: max-age=0');
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+        header('Cache-Control: cache, must-revalidate');
+        header('Pragma: public');
+        $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $writer->save('php://output');
+        exit();
+    }
+
+    /**
+     * exportIrdInventoryExcel()
+     * Exports the IRD inventory as an Excel file using PhpSpreadsheet.
+     */
+    public function exportIrdInventoryExcel()
+    {
+        require_once __DIR__ . '/../../vendor/autoload.php';
+        $city_id = isset($_SESSION['city_id']) ? (int)$_SESSION['city_id'] : 1;
+        
+        $sql = "SELECT 
+                    cm.channelName,
+                    br.broadcaster,
+                    ird.stbNum,
+                    ird.vcNum,
+                    ird.updated_at
+                FROM ird_mapping_tb ird
+                INNER JOIN channel_master_tb cm ON ird.channel_id = cm.channel_id
+                INNER JOIN broadcaster_tb br ON cm.broadcaster_id = br.broadcaster_id
+                INNER JOIN channel_mapping_tb cmap ON cm.channel_id = cmap.channel_id
+                INNER JOIN sid_tb sid ON cmap.sid_id = sid.sid_id
+                WHERE ird.city_id = $city_id
+                ORDER BY cm.channelName ASC";
+
+        $result = mysqli_query($this->db, $sql);
+        if (!$result) {
+            die('Invalid query: ' . mysqli_error($this->db));
+        }
+        $rowcount = 2;
+
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $spreadsheet->getProperties()->setCreator("Meghbela Digital")
+                                 ->setLastModifiedBy("Meghbela")
+                                 ->setTitle("IRD Inventory")
+                                 ->setSubject("IRD Inventory Export")
+                                 ->setDescription("IRD Inventory Export")
+                                 ->setKeywords("IRD Excel")
+                                 ->setCategory("IRD");
+        
+        // Add Headings
+        $spreadsheet->setActiveSheetIndex(0)
+            ->setCellValue('A1', 'Channel Name')
+            ->setCellValue('B1', 'Broadcaster')
+            ->setCellValue('C1', 'STB Number')
+            ->setCellValue('D1', 'VC Number')
+            ->setCellValue('E1', 'Last Updated');
+        
+        while($row = mysqli_fetch_array($result)){
+            $spreadsheet->getActiveSheet()->SetCellValue('A'.$rowcount, $row['channelName']);
+            $spreadsheet->getActiveSheet()->SetCellValue('B'.$rowcount, $row['broadcaster']);
+            $spreadsheet->getActiveSheet()->SetCellValue('C'.$rowcount, $row['stbNum']);
+            $spreadsheet->getActiveSheet()->SetCellValue('D'.$rowcount, $row['vcNum']);
+            $spreadsheet->getActiveSheet()->SetCellValue('E'.$rowcount, $row['updated_at']);
+            $rowcount++;
+        }
+        
+        
+        $file_name = $this->getCityName() . "_IRD_Inventory_" . date('Y-m-d') . ".xlsx";
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename=' . $file_name);
+        header('Cache-Control: max-age=0');
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+        header('Cache-Control: cache, must-revalidate');
+        header('Pragma: public');
+        $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $writer->save('php://output');
+        exit();
+    }
+
+    /**
+     * exportLogsExcel()
+     * Exports the activity logs as an Excel file using PhpSpreadsheet.
+     */
+    public function exportLogsExcel()
+    {
+        require_once __DIR__ . '/../../vendor/autoload.php';
+        
+        $sql = "SELECT 
+                    username,
+                    action,
+                    details,
+                    ip_address,
+                    created_at
+                FROM activity_log   
+                ORDER BY created_at DESC";
+
+        $result = mysqli_query($this->db, $sql);
+        if (!$result) {
+            die('Invalid query: ' . mysqli_error($this->db));
+        }
+        $rowcount = 2;
+
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $spreadsheet->getProperties()->setCreator("Meghbela Digital")
+                                 ->setLastModifiedBy("Meghbela")
+                                 ->setTitle("Activity Logs")
+                                 ->setSubject("Activity Logs Export")
+                                 ->setDescription("Activity Logs Export")
+                                 ->setKeywords("Logs Excel")
+                                 ->setCategory("Logs");
+        
+        // Add Headings
+        $spreadsheet->setActiveSheetIndex(0)
+            ->setCellValue('A1', 'User')
+            ->setCellValue('B1', 'Action')
+            ->setCellValue('C1', 'Details')
+            ->setCellValue('D1', 'IP Address')
+            ->setCellValue('E1', 'Date');
+        
+        while($row = mysqli_fetch_array($result)){
+            $spreadsheet->getActiveSheet()->SetCellValue('A'.$rowcount, $row['username']);
+            $spreadsheet->getActiveSheet()->SetCellValue('B'.$rowcount, $row['action']);
+            $spreadsheet->getActiveSheet()->SetCellValue('C'.$rowcount, $row['details']);
+            $spreadsheet->getActiveSheet()->SetCellValue('D'.$rowcount, $row['ip_address']);
+            $spreadsheet->getActiveSheet()->SetCellValue('E'.$rowcount, $row['created_at']);
+            $rowcount++;
+        }
+        
+        $file_name = "Activity_Logs_" . date('Y-m-d') . ".xlsx";
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename=' . $file_name);
+        header('Cache-Control: max-age=0');
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+        header('Cache-Control: cache, must-revalidate');
+        header('Pragma: public');
+        $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $writer->save('php://output');
+        exit();
+    }
+
+    /**
+     * exportIrdChallanExcel()
+     * Exports the IRD challan details as an Excel file using PhpSpreadsheet.
+     */
+    public function exportIrdChallanExcel()
+    {
+        require_once __DIR__ . '/../../vendor/autoload.php';
+        $city_id = isset($_SESSION['city_id']) ? (int)$_SESSION['city_id'] : 1;
+        
+        $sql = "SELECT 
+                    br.broadcaster,
+                    c.challan_date,
+                    c.details,
+                    c.created_at
+                FROM ird_challan_tb c
+                INNER JOIN broadcaster_tb br ON c.broadcaster_id = br.broadcaster_id
+                INNER JOIN city_tb ct ON c.city_id = ct.city_id
+                WHERE c.city_id = $city_id
+                ORDER BY c.challan_date DESC, c.created_at DESC";
+
+        $result = mysqli_query($this->db, $sql);
+        if (!$result) {
+            die('Invalid query: ' . mysqli_error($this->db));
+        }
+        $rowcount = 2;
+
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $spreadsheet->getProperties()->setCreator("Meghbela Digital")
+                                 ->setLastModifiedBy("Meghbela")
+                                 ->setTitle("IRD Challan Details")
+                                 ->setSubject("IRD Challan Export")
+                                 ->setDescription("IRD Challan Export")
+                                 ->setKeywords("Challan Excel")
+                                 ->setCategory("Challan");
+        
+        // Add Headings
+        $spreadsheet->setActiveSheetIndex(0)
+            ->setCellValue('A1', 'Broadcaster')
+            ->setCellValue('B1', 'Challan Date')
+            ->setCellValue('C1', 'Details')
+            ->setCellValue('D1', 'Added Date');
+        
+        while($row = mysqli_fetch_array($result)){
+            $spreadsheet->getActiveSheet()->SetCellValue('A'.$rowcount, $row['broadcaster']);
+            $spreadsheet->getActiveSheet()->SetCellValue('B'.$rowcount, $row['challan_date']);
+            $spreadsheet->getActiveSheet()->SetCellValue('C'.$rowcount, $row['details']);
+            $spreadsheet->getActiveSheet()->SetCellValue('D'.$rowcount, $row['created_at']);
+            $rowcount++;
+        }
+        
+        $file_name = $this->getCityName() . "_IRD_Challan_" . date('Y-m-d') . ".xlsx";
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename=' . $file_name);
         header('Cache-Control: max-age=0');
@@ -676,8 +899,11 @@ class HomeController
      */
     public function irdChallanList()
     {
+        
+        $city_id = isset($_SESSION['city_id']) ? (int)$_SESSION['city_id'] : 1;
         $challans = [];
-        $result = $this->db->query("SELECT c.*, b.broadcaster FROM ird_challan_tb c INNER JOIN broadcaster_tb b ON c.broadcaster_id = b.broadcaster_id ORDER BY c.challan_date DESC, c.created_at DESC");
+        $result = $this->db->query("SELECT c.*, b.broadcaster FROM ird_challan_tb c INNER JOIN broadcaster_tb b ON c.broadcaster_id = b.broadcaster_id INNER JOIN city_tb ct ON c.city_id = ct.city_id
+                WHERE c.city_id = $city_id ORDER BY c.challan_date DESC, c.created_at DESC");
         while ($row = $result->fetch_assoc()) {
             $challans[] = $row;
         }
@@ -704,6 +930,8 @@ class HomeController
      */
     public function irdChallanAddSubmit()
     {
+        $city_id = isset($_SESSION['city_id']) ? (int)$_SESSION['city_id'] : 1;
+        $city_name = $this->getCityName();
         $broadcaster_id = (int)($_POST['broadcaster_id'] ?? 0);
         $challan_date = $_POST['challan_date'] ?? '';
         $details = trim($_POST['details'] ?? '');
@@ -737,11 +965,11 @@ class HomeController
             exit;
         }
         $file_path = 'uploads/challans/' . $basename;
-        $stmt = $this->db->prepare("INSERT INTO ird_challan_tb (broadcaster_id, challan_date, details, file_path, created_at, updated_at) VALUES (?, ?, ?, ?, NOW(), NOW())");
-        $stmt->bind_param('isss', $broadcaster_id, $challan_date, $details, $file_path);
+        $stmt = $this->db->prepare("INSERT INTO ird_challan_tb (broadcaster_id, challan_date, details, file_path, city_id,created_at, updated_at) VALUES (?, ?, ?, ?, ?, NOW(), NOW())");
+        $stmt->bind_param('isssi', $broadcaster_id, $challan_date, $details, $file_path, $city_id);
         $stmt->execute();
         $stmt->close();
-        \App\LogHelper::log($this->db, 'Add IRD Challan', "Broadcaster $broadcaster_id, Date $challan_date, File $file_path");
+        \App\LogHelper::log($this->db, 'Add IRD Challan', "Broadcaster $broadcaster_id, Date $challan_date, File $file_path, For city $city_name ");
         header('Location: ' . BASE_PATH . '/ird-challan');
         exit();
     }

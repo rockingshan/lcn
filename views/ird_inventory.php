@@ -14,7 +14,12 @@ require_once __DIR__ . '/partials/header.php';
     <h2 class="text-2xl font-bold mb-6">Broadcaster IRD Inventory</h2>
     <div class="mb-4 flex justify-between items-center">
         <input type="text" id="searchInput" onkeyup="searchIrdTable()" placeholder="Search inventory..." class="p-2 border border-gray-300 rounded-md w-full md:w-1/3">
-        <a href="<?php echo BASE_PATH; ?>/ird-inventory/add" class="ml-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">Add New IRD</a>
+        <div class="flex space-x-2">
+            <a href="<?php echo BASE_PATH; ?>/export-ird-inventory" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 flex items-center">
+                <i class="fas fa-file-excel mr-2"></i>Download Excel
+            </a>
+            <a href="<?php echo BASE_PATH; ?>/ird-inventory/add" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Add New IRD</a>
+        </div>
     </div>
     <div class="overflow-x-auto">
         <table id="irdTable" class="min-w-full bg-white border border-gray-200">

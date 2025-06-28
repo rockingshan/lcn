@@ -1,12 +1,16 @@
-<?php 
+<?php
 /*
  * views/partials/footer.php
  *
- * Footer partial for all pages.
- * - Renders copyright and footer.
- * - Uses Tailwind CSS for styling.
+ * Footer partial for LCN Management System.
+ * - Closes the main content area
+ * - Provides footer with copyright information
+ * - Includes JavaScript for mobile menu toggle and table functionality
+ * - Uses Tailwind CSS for styling
  */
-</main> <!-- closes the main tag from the header -->
+?>
+
+</main>
 
 <footer class="bg-gray-800 text-white text-center p-4 fixed bottom-0 w-full">
     <p>&copy; 2012-<?php echo date("Y"); ?> All Rights with Meghbela Digital</p>
