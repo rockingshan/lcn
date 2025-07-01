@@ -30,36 +30,6 @@ RewriteEngine On
     Deny from all
 </FilesMatch>
 
-# Prevent access to vendor directory
-<Directory "vendor">
-    Order allow,deny
-    Deny from all
-</Directory>
-
-# Prevent access to logs directory
-<Directory "logs">
-    Order allow,deny
-    Deny from all
-</Directory>
-
-# Prevent access to backups directory
-<Directory "backups">
-    Order allow,deny
-    Deny from all
-</Directory>
-
-# Allow access to uploads directory but restrict file types
-<Directory "uploads">
-    <FilesMatch "\.(pdf|jpg|jpeg|png|gif)$">
-        Order allow,deny
-        Allow from all
-    </FilesMatch>
-    <FilesMatch ".*">
-        Order allow,deny
-        Deny from all
-    </FilesMatch>
-</Directory>
-
 # Compression
 <IfModule mod_deflate.c>
     AddOutputFilterByType DEFLATE text/plain
@@ -108,7 +78,52 @@ ServerSignature Off
 # Disable directory browsing
 Options -Indexes
 
-# Custom error pages
+# Use default error handling or point to index.php if desired
 ErrorDocument 404 /index.php
 ErrorDocument 403 /index.php
-ErrorDocument 500 /index.php 
+ErrorDocument 500 /index.php
+
+# Prevent access to vendor directory
+# <Directory "vendor">
+#     Order allow,deny
+#     Deny from all
+# </Directory>
+#
+# Prevent access to logs directory
+# <Directory "logs">
+#     Order allow,deny
+#     Deny from all
+# </Directory>
+#
+# Prevent access to backups directory
+# <Directory "backups">
+#     Order allow,deny
+#     Deny from all
+# </Directory>
+#
+# Allow access to uploads directory but restrict file types
+# <Directory "uploads">
+#     <FilesMatch "\.(pdf|jpg|jpeg|png|gif)$">
+#         Order allow,deny
+#         Allow from all
+#     </FilesMatch>
+#     <FilesMatch ".*">
+#         Order allow,deny
+#         Deny from all
+#     </FilesMatch>
+# </Directory>
+
+# Block access to vendor, logs, and backups directories
+RedirectMatch 403 ^/vendor/
+RedirectMatch 403 ^/logs/
+RedirectMatch 403 ^/backups/
+
+# Restrict uploads: allow only images and pdfs
+<FilesMatch "^uploads/.*\.(pdf|jpg|jpeg|png|gif)$">
+    Order allow,deny
+    Allow from all
+</FilesMatch>
+<FilesMatch "^uploads/.*$">
+    Order allow,deny
+    Deny from all
+</FilesMatch> 
