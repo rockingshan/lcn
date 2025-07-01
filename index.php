@@ -1,172 +1,145 @@
 <?php
-  session_start();
-  //starting the connection to db
-  include("include/connect.php");
-  if (isset($_GET['par'])) {
-    if ($_GET['par'] == 'kolkata') {
-      $_SESSION['select_db'] = 'meghbela_lcn_db_kol';
-      $_SESSION['city'] = 'Kolkata';
-    } elseif ($_GET['par'] == 'berhampore') {
-      $_SESSION['select_db'] = 'meghbela_lcn_db_bpc';
-      $_SESSION['city'] = 'Berhampore';
-    } elseif ($_GET['par'] == 'haldia') {
-      $_SESSION['select_db'] = 'meghbela_lcn_db_hlz';
-      $_SESSION['city'] = 'Haldia';
-    } elseif ($_GET['par'] == 'bankura') {
-      $_SESSION['select_db'] = 'meghbela_lcn_db_bqa';
-      $_SESSION['city'] = 'Bankura';
-    }
-  } else {
-    $_SESSION['select_db'] = 'meghbela_lcn_db_kol';
-  }
-  mysqli_select_db($con, $_SESSION['select_db']) or die("No database");
-  //making the search in db
-  $sql = "SELECT * FROM channel_tb,lcn_tb,package_tb,sid_tb WHERE channel_tb.lcn=lcn_tb.lcn AND channel_tb.sid=package_tb.sid AND package_tb.sid=sid_tb.sid ORDER BY lcn_tb.lcn";
+/*
+ * index.php - Front Controller for LCN Management System
+ *
+ * - All web requests are routed through this file.
+ * - Handles authentication middleware (login required for all pages except /login).
+ * - Uses FastRoute for routing URLs to controller methods.
+ * - Loads Composer autoload, app config, and DB connection.
+ * - Handles 404/405 errors and loads the correct controller/view.
+ */
+session_start();
 
-  $result = mysqli_query($con, $sql);
-  if (!$result) { // add this check.
-    die('Invalid query: ' . mysqli_error());
-  }
-  ?>
-  <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/config/app.php'; // Defines BASE_PATH
+require_once __DIR__ . '/config/database.php'; // Provides $auth connection
 
-<head>
+use App\Controllers\AuthController;
+use App\Controllers\HomeController;
 
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <link rel="icon" type="image/png" sizes="192x192" href="images/android-icon-192x192.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="96x96" href="images/favicon-96x96.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
-  <link rel="manifest" href="/images/manifest.json">
-  <meta name="msapplication-TileColor" content="#ffffff">
-  <meta name="msapplication-TileImage" content="images/ms-icon-144x144.png">
-  <meta name="theme-color" content="#ffffff">
-  <link rel="stylesheet" href="style/login.css">
-  <!-- <link rel="stylesheet" type="text/css" href="style/main.css" />
-<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Lato"  /> -->
-
-  <!---  Start New styling -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
-
-  <link rel="stylesheet" href="lib/bootstrap-table.css">
-
-  <script src="lib/login.js"></script>
-
-  <script src="lib/bootstrap-table.js"></script>
-  <script src="lib/bootstrap-table-toolbar.js"></script>
+// --- Authentication Middleware ---
+$request_uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+// If user is not logged in and not trying to access login page, redirect them.
+if (!isset($_SESSION['user_id']) && $request_uri !== BASE_PATH . '/login') {
+    header('Location: ' . BASE_PATH . '/login');
+    exit();
+}
+// If user IS logged in and tries to access login page, redirect to home.
+if (isset($_SESSION['user_id']) && $request_uri === BASE_PATH . '/login') {
+    header('Location: ' . BASE_PATH . '/');
+    exit();
+}
+// --- End of Middleware ---
 
 
+$dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) use ($auth) {
+    
+    // Auth Routes
+    $r->addRoute('GET', '/login', [new AuthController($auth), 'showLoginForm']);
+    $r->addRoute('POST', '/login', [new AuthController($auth), 'login']);
+    $r->addRoute('GET', '/logout', [new AuthController($auth), 'logout']);
 
-  <title>Meghbela Digital LCN</title>
-</head>
+    // City change route
+    $r->addRoute('POST', '/set-city', [new HomeController($auth), 'setCity']);
 
-<body>
+    // Route for the homepage (now protected and using a controller)
+    $r->addRoute('GET', '/', [new HomeController($auth), 'index']);
 
-  <nav class="navbar navbar-default">
-    <div class="container-fluid">
-      <div class="navbar-header">
-        <a class="navbar-brand" href="#">Meghbela LCN</a>
-      </div>
-      <ul class="nav navbar-nav">
-        <li><a href="export.php"><span class="glyphicon glyphicon-save"></span>Download LCN</a></li>
-        <li><a href="package_master.php"><span class="glyphicon glyphicon-floppy-save"></span>Export Package Master</a></li>
-      </ul>
-      <div class="nav navbar-nav">
-        <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-plane"></span> Change City
-            <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="index.php?par=kolkata">Kolkata</a></li>
-            <li><a href="index.php?par=berhampore">Berhampore</a></li>
-            <li><a href="index.php?par=bankura">Bankura</a></li>
-            <li><a href="index.php?par=haldia">Haldia</a></li>
-          </ul>
-        </li>
-      </div>
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="#login-modal" data-toggle="modal" data-target="#login-modal"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-      </ul>
-    </div>
-  </nav> <!-- Login data is passed to lib/login.js -->
-  <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog">
-      <div class="loginmodal-container">
-        <h1>Login for Advanced Features</h1><br>
-        <form class="form-signin" method="post" id="login-form">
-          <div id="error">
-            <!-- error will be shown here ! -->
-          </div>
-          <input type="text" name="user" placeholder="Username">
-          <input type="password" name="pass" placeholder="Password">
-          <!-- <input type="submit" name="login" class="login loginmodal-submit" value="Login"> -->
-          <button type="submit" class="btn btn-default" name="btn-login" id="btn-login">
-            <span class="glyphicon glyphicon-log-in"></span> &nbsp; Sign In
-          </button>
-        </form>
+    // Edit Channel routes
+    $r->addRoute('GET', '/edit-channel/{channel_id:\d+}', [new HomeController($auth), 'editChannelForm']);
+    $r->addRoute('POST', '/edit-channel/{channel_id:\d+}', [new HomeController($auth), 'editChannelSubmit']);
 
-      </div>
-    </div>
-  </div>
+    // Modify LCN routes
+    $r->addRoute('GET', '/modify-lcn/{cmap_id:\d+}', [new HomeController($auth), 'modifyLcnForm']);
+    $r->addRoute('POST', '/modify-lcn/{cmap_id:\d+}', [new HomeController($auth), 'modifyLcnSubmit']);
 
-  <div class="container-fluid">
+    // Swap LCN routes
+    $r->addRoute('GET', '/swap-lcn/{cmap_id:\d+}', [new HomeController($auth), 'swapLcnForm']);
+    $r->addRoute('POST', '/swap-lcn/{cmap_id:\d+}', [new HomeController($auth), 'swapLcnSubmit']);
 
-    <!--initializing the display variable to print the table on webpage -->
-    <table cellpadding="1" align="center" data-toggle="table" data-search="true" data-advanced-search="true" data-id-table="advancedTable" class="table table-striped">
-      <thead>
-        <tr>
-          <th>GENRE</th>
-          <th data-sortable="true">LCN</th>
-          <th data-field="sid" data-sortable="true">SID</th>
-          <th data-field="freq" data-sortable="true">FREQ</th>
-          <th data-field="name">CHANNEL NAME</th>
-          <th data-field="brn" data-sortable="true">205 </th>
-          <th data-field="sil" data-sortable="true"> 230 </th>
-          <th data-field="gold" data-sortable="true"> 295 </th>
-          <th data-field="gold" data-sortable="true"> 330 </th>
-          <th data-field="pla" data-sortable="true"> 350 </th>
-          <!--    <th data-field="pw" data-sortable="true"> Power pack </th>-->
-          <th> A La Carte Price(&#8377) </th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php
-        $display = '';
-        //sending the results to an array and printing
-        while ($row = mysqli_fetch_array($result)) {
-          $display .= "<tr>
-    <td>" . $row['genre'] . "</td>
-    <td>" . $row['lcn'] . "</td>
-    <td>" . $row['sid'] . "</td>
-	<td>" . $row['freq'] . "</td>
-    <td><strong>" . $row['channel'] . "</strong></td>
-    <td>" . $row['205'] . "</td>
-    <td>" . $row['230'] . "</td>
-    <td>" . $row['295'] . "</td>
-	<td>" . $row['330'] . "</td>
-    <td>" . $row['350'] . "</td>
-    <td>" . $row['price'] . "</td>
+    // Logs page
+    $r->addRoute('GET', '/logs', [new HomeController($auth), 'logsPage']);
 
-  </tr>";
-        }
-        echo $display;
-        ?>
-      </tbody>
-    </table>
-  </div>
+    // IRD Inventory page
+    $r->addRoute('GET', '/ird-inventory', [new HomeController($auth), 'irdInventoryPage']);
 
-  <footer class="footer">
-    <div class="copyright">
-      <div class="container">
-        <div class="col-md-6">
-          <p>&copy; 2012-<?php echo date("Y"); ?> All Rights with Meghbela Digital</p>
-        </div>
-      </div>
-    </div>
-  </footer>
-</body>
+    // IRD Inventory CRUD
+    $r->addRoute('GET', '/ird-inventory/add', [new HomeController($auth), 'irdAddForm']);
+    $r->addRoute('POST', '/ird-inventory/add', [new HomeController($auth), 'irdAddSubmit']);
+    $r->addRoute('GET', '/ird-inventory/edit/{ird_id:\d+}', [new HomeController($auth), 'irdEditForm']);
+    $r->addRoute('POST', '/ird-inventory/edit/{ird_id:\d+}', [new HomeController($auth), 'irdEditSubmit']);
+    $r->addRoute('POST', '/ird-inventory/delete/{ird_id:\d+}', [new HomeController($auth), 'irdDelete']);
 
-</html>
+    // Add SID and Add Channel
+    $r->addRoute('GET', '/add-sid', [new HomeController($auth), 'addSidForm']);
+    $r->addRoute('POST', '/add-sid', [new HomeController($auth), 'addSidSubmit']);
+    $r->addRoute('GET', '/add-channel', [new HomeController($auth), 'addChannelForm']);
+    $r->addRoute('POST', '/add-channel', [new HomeController($auth), 'addChannelSubmit']);
+
+    // AJAX: Check SID uniqueness
+    $r->addRoute('POST', '/ajax/check-sid', [new HomeController($auth), 'ajaxCheckSid']);
+
+    // Add Channel Mapping
+    $r->addRoute('GET', '/add-channel-mapping', [new HomeController($auth), 'addChannelMappingForm']);
+    $r->addRoute('POST', '/add-channel-mapping', [new HomeController($auth), 'addChannelMappingSubmit']);
+
+    // Export LCN Excel
+    $r->addRoute('GET', '/export-lcn', [new HomeController($auth), 'exportLcnExcel']);
+
+    // Export IRD Inventory Excel
+    $r->addRoute('GET', '/export-ird-inventory', [new HomeController($auth), 'exportIrdInventoryExcel']);
+
+    // Export Logs Excel
+    $r->addRoute('GET', '/export-logs', [new HomeController($auth), 'exportLogsExcel']);
+
+    // Export IRD Challan Excel
+    $r->addRoute('GET', '/export-ird-challan', [new HomeController($auth), 'exportIrdChallanExcel']);
+
+    // IRD Challan Details
+    $r->addRoute('GET', '/ird-challan', [new HomeController($auth), 'irdChallanList']);
+    $r->addRoute('GET', '/ird-challan/add', [new HomeController($auth), 'irdChallanAddForm']);
+    $r->addRoute('POST', '/ird-challan/add', [new HomeController($auth), 'irdChallanAddSubmit']);
+});
+
+// Fetch method and URI from somewhere
+$httpMethod = $_SERVER['REQUEST_METHOD'];
+$uri = $_SERVER['REQUEST_URI'];
+
+// Strip query string (?foo=bar) and decode URI
+if (false !== $pos = strpos($uri, '?')) {
+    $uri = substr($uri, 0, $pos);
+}
+$uri = rawurldecode($uri);
+
+// This part makes the router work correctly in subdirectories
+$basePath = dirname($_SERVER['SCRIPT_NAME']);
+if ($basePath !== '/' && $basePath !== '\\' && str_starts_with($uri, $basePath)) {
+    $uri = substr($uri, strlen($basePath));
+}
+
+// If the URI is empty after stripping the base path, it means we are at the root.
+if (empty($uri)) {
+    $uri = '/';
+}
+
+$routeInfo = $dispatcher->dispatch($httpMethod, $uri);
+
+switch ($routeInfo[0]) {
+    case FastRoute\Dispatcher::NOT_FOUND:
+        // ... 404 Not Found
+        http_response_code(404);
+        require 'custom_404.html';
+        break;
+    case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
+        $allowedMethods = $routeInfo[1];
+        // ... 405 Method Not Allowed
+        http_response_code(405);
+        echo '405 - Method Not Allowed';
+        break;
+    case FastRoute\Dispatcher::FOUND:
+        $handler = $routeInfo[1];
+        $vars = $routeInfo[2];
+        // Call the handler
+        call_user_func_array($handler, $vars);
+        break;
+} 

@@ -1,0 +1,129 @@
+# LCN Management System - Production .htaccess
+# Security and Performance Optimizations
+
+# Enable rewrite engine
+RewriteEngine On
+
+# Force HTTPS (uncomment if using SSL)
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Security Headers
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options nosniff
+    Header always set X-Frame-Options DENY
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains" env=HTTPS
+</IfModule>
+
+# Prevent access to sensitive files
+<FilesMatch "\.(env|log|sql|bak|backup|old|tmp|temp)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Prevent access to configuration files
+<FilesMatch "^(config|composer\.(json|lock)|package\.json|yarn\.lock)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Compression
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
+</IfModule>
+
+# Browser caching
+<IfModule mod_expires.c>
+    ExpiresActive on
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/ico "access plus 1 year"
+    ExpiresByType image/icon "access plus 1 year"
+    ExpiresByType text/plain "access plus 1 month"
+    ExpiresByType application/pdf "access plus 1 month"
+</IfModule>
+
+# URL Rewriting for clean URLs
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]
+
+# Prevent access to hidden files
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Limit file upload size
+LimitRequestBody 5242880
+
+# Disable server signature
+ServerSignature Off
+
+# Disable directory browsing
+Options -Indexes
+
+# Use default error handling or point to index.php if desired
+ErrorDocument 404 /index.php
+ErrorDocument 403 /index.php
+ErrorDocument 500 /index.php
+
+# Prevent access to vendor directory
+# <Directory "vendor">
+#     Order allow,deny
+#     Deny from all
+# </Directory>
+#
+# Prevent access to logs directory
+# <Directory "logs">
+#     Order allow,deny
+#     Deny from all
+# </Directory>
+#
+# Prevent access to backups directory
+# <Directory "backups">
+#     Order allow,deny
+#     Deny from all
+# </Directory>
+#
+# Allow access to uploads directory but restrict file types
+# <Directory "uploads">
+#     <FilesMatch "\.(pdf|jpg|jpeg|png|gif)$">
+#         Order allow,deny
+#         Allow from all
+#     </FilesMatch>
+#     <FilesMatch ".*">
+#         Order allow,deny
+#         Deny from all
+#     </FilesMatch>
+# </Directory>
+
+# Block access to vendor, logs, and backups directories
+RedirectMatch 403 ^/vendor/
+RedirectMatch 403 ^/logs/
+RedirectMatch 403 ^/backups/
+
+# Restrict uploads: allow only images and pdfs
+<FilesMatch "^uploads/.*\.(pdf|jpg|jpeg|png|gif)$">
+    Order allow,deny
+    Allow from all
+</FilesMatch>
+<FilesMatch "^uploads/.*$">
+    Order allow,deny
+    Deny from all
+</FilesMatch> 
