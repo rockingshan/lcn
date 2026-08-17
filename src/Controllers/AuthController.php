@@ -53,7 +53,7 @@ class AuthController
         
         $stmt->close();
 
-        if ($user) {
+        if ($user && (int)$user['is_active'] === 1) {
             // User found, now verify password
             if (password_verify($password, $user['pass'])) {
                 // Modern hash verification successful
@@ -90,6 +90,18 @@ class AuthController
         $_SESSION['user_id'] = $user['user_id'];
         $_SESSION['username'] = $user['user'];
         $_SESSION['is_admin'] = $user['is_admin'];
+        $_SESSION['changed_frequencies'] = [];
+        $_SESSION['permissions'] = [];
+        if (!(int)$user['is_admin']) {
+            $stmt = $this->db->prepare('SELECT permission_key FROM user_permission_tb WHERE user_id = ?');
+            $stmt->bind_param('i', $user['user_id']);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            while ($row = $result->fetch_assoc()) {
+                $_SESSION['permissions'][] = $row['permission_key'];
+            }
+            $stmt->close();
+        }
         
         header('Location: ' . BASE_PATH . '/');
         exit();
@@ -107,4 +119,4 @@ class AuthController
         header('Location: ' . BASE_PATH . '/login');
         exit();
     }
-} 
+}

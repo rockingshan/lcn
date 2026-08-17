@@ -13,6 +13,12 @@ require_once __DIR__ . '/partials/header.php';
 ?>
 
 <div class="bg-white p-6 rounded-lg shadow-lg">
+    <?php if (!empty($_SESSION['changed_frequencies'])): ?>
+        <div class="mb-4 border-l-4 border-amber-500 bg-amber-50 p-4 text-amber-900">
+            <strong>LCN strings pending:</strong> <?php echo count($_SESSION['changed_frequencies']); ?> frequency update<?php echo count($_SESSION['changed_frequencies']) === 1 ? '' : 's'; ?> were changed in this session.
+            <?php if (\App\Access::can('generator')): ?><a class="underline font-semibold" href="<?php echo BASE_PATH; ?>/lcn-strings">Generate and copy the strings.</a><?php endif; ?>
+        </div>
+    <?php endif; ?>
     <div class="mb-4 flex justify-between items-center">
         <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Search for channels..." class="p-2 border border-gray-300 rounded-md w-full md:w-1/3">
         <a href="<?php echo BASE_PATH; ?>/export-lcn" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 flex items-center">
@@ -45,12 +51,12 @@ require_once __DIR__ . '/partials/header.php';
                     <td class="text-left py-3 px-4"><?php echo htmlspecialchars($row['broadcaster']); ?></td>
                     <td class="text-left py-3 px-4"><?php echo htmlspecialchars($row['price']); ?></td>
                     <td class="text-left py-3 px-4 space-x-2">
-                        <a href="<?php echo BASE_PATH; ?>/edit-channel/<?php echo urlencode($row['channel_id']); ?>" class="inline-block px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-xs font-semibold">Edit Channel</a>
-                        <a href="<?php echo BASE_PATH; ?>/modify-lcn/<?php echo urlencode($row['cmap_id']); ?>" class="inline-block px-3 py-1 bg-yellow-400 text-gray-900 rounded hover:bg-yellow-500 text-xs font-semibold">Modify LCN</a>
-                        <a href="<?php echo BASE_PATH; ?>/swap-lcn/<?php echo urlencode($row['cmap_id']); ?>" class="inline-block px-3 py-1 bg-purple-500 text-white rounded hover:bg-purple-600 text-xs font-semibold">Swap LCN</a>
-                        <?php if (!empty($row['ird_id'])): ?>
+                        <?php if (\App\Access::can('edit_channel')): ?><a href="<?php echo BASE_PATH; ?>/edit-channel/<?php echo urlencode($row['channel_id']); ?>" class="inline-block px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-xs font-semibold">Edit Channel</a><?php endif; ?>
+                        <?php if (\App\Access::can('modify_lcn')): ?><a href="<?php echo BASE_PATH; ?>/modify-lcn/<?php echo urlencode($row['cmap_id']); ?>" class="inline-block px-3 py-1 bg-yellow-400 text-gray-900 rounded hover:bg-yellow-500 text-xs font-semibold">Modify LCN</a><?php endif; ?>
+                        <?php if (\App\Access::can('swap_lcn')): ?><a href="<?php echo BASE_PATH; ?>/swap-lcn/<?php echo urlencode($row['cmap_id']); ?>" class="inline-block px-3 py-1 bg-purple-500 text-white rounded hover:bg-purple-600 text-xs font-semibold">Swap LCN</a><?php endif; ?>
+                        <?php if (\App\Access::can('ird') && !empty($row['ird_id'])): ?>
                         <a href="<?php echo BASE_PATH; ?>/ird-inventory/edit/<?php echo urlencode($row['ird_id']); ?>" class="inline-block px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 text-xs font-semibold">Update IRD</a>
-                        <?php else: ?>
+                        <?php elseif (\App\Access::can('ird')): ?>
                         <a href="<?php echo BASE_PATH; ?>/ird-inventory/add?channel_id=<?php echo urlencode($row['channel_id']); ?>" class="inline-block px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 text-xs font-semibold">Add IRD</a>
                         <?php endif; ?>
                     </td>
@@ -61,4 +67,4 @@ require_once __DIR__ . '/partials/header.php';
     </div>
 </div>
 
-<?php require_once __DIR__ . '/partials/footer.php'; ?> 
+<?php require_once __DIR__ . '/partials/footer.php'; ?>

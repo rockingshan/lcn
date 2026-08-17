@@ -1,0 +1,57 @@
+services:
+  php:
+    image: chialab/php:8.2-apache
+    container_name: lcn_app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    command: >-
+      sh -c 'if [ ! -f vendor/autoload.php ]; then composer install --no-dev --prefer-dist --optimize-autoloader; fi;
+      exec apache2-foreground'
+    volumes:
+      - .:/var/www/html
+      - composer_vendor:/var/www/html/vendor
+    environment:
+      TZ: Asia/Kolkata
+      DB_HOST: mysql
+      DB_USERNAME: md_dbuser
+      DB_PASSWORD: "m#gh@c@s"
+      DB_DATABASE: meghbela_lcn_db_kol
+    ports:
+      - "8081:80"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - lcnapp
+
+  mysql:
+    image: mysql:8.4
+    container_name: lcn_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: meghbela_lcn_db_kol
+      MYSQL_ROOT_PASSWORD: hello12345
+      MYSQL_USER: md_dbuser
+      MYSQL_PASSWORD: m#gh@c@s
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./include/lcn_db_new.sql:/docker-entrypoint-initdb.d/01-lcn.sql:ro
+      - ./database/20260817_user_permissions.sql:/docker-entrypoint-initdb.d/02-user-permissions.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+    ports:
+      - "3308:3306"
+    networks:
+      - lcnapp
+
+networks:
+  lcnapp:
+    driver: bridge
+
+volumes:
+  composer_vendor:
+  mysql_data:

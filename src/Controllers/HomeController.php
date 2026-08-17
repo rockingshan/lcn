@@ -203,6 +203,7 @@ class HomeController
         $stmt->bind_param('ii', $lcn_id, $cmap_id);
         $stmt->execute();
         $stmt->close();
+        $this->trackFrequency($cmap_id);
         // Log
         $details = "{$old['channelName']} with SID {$old['sid']} LCN changed from {$old['lcn']} to {$new['lcn']} ({$new['genre']})";
         LogHelper::log($this->db, 'Modify LCN', $details);
@@ -283,11 +284,47 @@ class HomeController
         $stmt2->bind_param('ii', $lcn_id_1, $target_cmap_id);
         $stmt2->execute();
         $stmt2->close();
+        $this->trackFrequency($cmap_id);
+        $this->trackFrequency($target_cmap_id);
         // Log
         $details = "Swapped LCN between {$c1['channelName']} (SID {$c1['sid']}) and {$c2['channelName']} (SID {$c2['sid']})";
         LogHelper::log($this->db, 'Swap LCN', $details);
         header('Location: ' . BASE_PATH . '/');
         exit();
+    }
+
+    private function trackFrequency(int $cmapId): void
+    {
+        $stmt = $this->db->prepare('SELECT sid.freq FROM channel_mapping_tb cmap JOIN sid_tb sid ON sid.sid_id = cmap.sid_id WHERE cmap.cmap_id = ?');
+        $stmt->bind_param('i', $cmapId);
+        $stmt->execute();
+        $row = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        if ($row) {
+            $_SESSION['changed_frequencies'] = array_values(array_unique(array_merge($_SESSION['changed_frequencies'] ?? [], [(int)$row['freq']])));
+        }
+    }
+
+    public function lcnStringsPage()
+    {
+        $frequencies = $_SESSION['changed_frequencies'] ?? [];
+        sort($frequencies, SORT_NUMERIC);
+        $generated = [];
+        $cityId = (int)($_SESSION['city_id'] ?? 1);
+        $stmt = $this->db->prepare('SELECT sid.sidhex, lcn.lcnhex FROM channel_mapping_tb cmap JOIN sid_tb sid ON sid.sid_id=cmap.sid_id JOIN lcn_tb lcn ON lcn.lcn_id=cmap.lcn_id WHERE sid.city_id=? AND sid.freq=? ORDER BY lcn.lcn');
+        foreach ($frequencies as $frequency) {
+            $stmt->bind_param('ii', $cityId, $frequency);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $parts = [];
+            while ($row = $result->fetch_assoc()) {
+                $hex = strtoupper(preg_replace('/[^0-9A-F]/i', '', $row['sidhex'] . $row['lcnhex']));
+                if (strlen($hex) === 8) { $parts[] = trim(chunk_split($hex, 2, ' ')); }
+            }
+            $generated[] = ['frequency' => $frequency, 'string' => implode(' ', $parts)];
+        }
+        $stmt->close();
+        require __DIR__ . '/../../views/lcn_strings.php';
     }
 
     /**
@@ -973,4 +1010,4 @@ class HomeController
         header('Location: ' . BASE_PATH . '/ird-challan');
         exit();
     }
-} 
+}

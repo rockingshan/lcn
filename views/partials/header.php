@@ -32,9 +32,10 @@
                             <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Download Master LCN</a>
                          </div>
                     </div>-->
-                    <a href="<?php echo BASE_PATH; ?>/ird-inventory" class="py-5 px-3 text-gray-700 hover:text-gray-900">Broadcaster IRD Inventory</a>
-                    <a href="<?php echo BASE_PATH; ?>/ird-challan" class="py-5 px-3 text-gray-700 hover:text-gray-900">IRD Challan Details</a>
-                    <a href="<?php echo BASE_PATH; ?>/logs" class="py-5 px-3 text-gray-700 hover:text-gray-900">View Logs</a>
+                    <?php if (\App\Access::can('ird')): ?><a href="<?php echo BASE_PATH; ?>/ird-inventory" class="py-5 px-3 text-gray-700 hover:text-gray-900">Broadcaster IRD Inventory</a><a href="<?php echo BASE_PATH; ?>/ird-challan" class="py-5 px-3 text-gray-700 hover:text-gray-900">IRD Challan Details</a><?php endif; ?>
+                    <?php if (\App\Access::can('logs')): ?><a href="<?php echo BASE_PATH; ?>/logs" class="py-5 px-3 text-gray-700 hover:text-gray-900">View Logs</a><?php endif; ?>
+                    <?php if (\App\Access::can('generator')): ?><a href="<?php echo BASE_PATH; ?>/lcn-strings" class="py-5 px-3 text-gray-700 hover:text-gray-900">LCN Strings<?php if (!empty($_SESSION['changed_frequencies'])): ?> <span class="bg-red-600 text-white rounded-full px-2 text-xs"><?php echo count($_SESSION['changed_frequencies']); ?></span><?php endif; ?></a><?php endif; ?>
+                    <?php if (!empty($_SESSION['is_admin'])): ?><a href="<?php echo BASE_PATH; ?>/users" class="py-5 px-3 text-gray-700 hover:text-gray-900">Users</a><?php endif; ?>
                 </div>
             </div>
 
@@ -60,7 +61,7 @@
                         </div>
                     </form>
                 </div>
-                <div class="relative group">
+                <?php if (\App\Access::can('add_records')): ?><div class="relative group">
                     <a href="#" class="py-5 px-3 text-gray-700 hover:text-gray-900 flex items-center">
                         <i class="fas fa-plus mr-1"></i> Add Records <i class="fas fa-chevron-down fa-xs ml-1"></i>
                     </a>
@@ -70,7 +71,7 @@
                         <a href="<?php echo BASE_PATH; ?>/add-channel-mapping" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Add Channel Mapping</a>
                         <a href="<?php echo BASE_PATH; ?>/add-channel" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Add New Channel</a>
                     </div>
-                </div>
+                </div><?php endif; ?>
                 <a href="<?php echo BASE_PATH; ?>/logout" class="py-2 px-3 bg-red-500 text-white rounded hover:bg-red-600 transition duration-300 flex items-center">
                     <i class="fas fa-sign-out-alt mr-2"></i>Logout
                 </a>
@@ -102,4 +103,4 @@ function setCity(cityId) {
     document.getElementById('city_id_input').value = cityId;
     document.getElementById('cityForm').submit();
 }
-</script> 
+</script>

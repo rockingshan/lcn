@@ -16,6 +16,8 @@ require_once __DIR__ . '/config/database.php'; // Provides $auth connection
 
 use App\Controllers\AuthController;
 use App\Controllers\HomeController;
+use App\Controllers\UserController;
+use App\Access;
 
 // --- Authentication Middleware ---
 $request_uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -59,6 +61,12 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) u
 
     // Logs page
     $r->addRoute('GET', '/logs', [new HomeController($auth), 'logsPage']);
+    $r->addRoute('GET', '/lcn-strings', [new HomeController($auth), 'lcnStringsPage']);
+    $r->addRoute('GET', '/users', [new UserController($auth), 'index']);
+    $r->addRoute('GET', '/users/add', [new UserController($auth), 'form']);
+    $r->addRoute('POST', '/users/add', [new UserController($auth), 'save']);
+    $r->addRoute('GET', '/users/{id:\d+}', [new UserController($auth), 'form']);
+    $r->addRoute('POST', '/users/{id:\d+}', [new UserController($auth), 'save']);
 
     // IRD Inventory page
     $r->addRoute('GET', '/ird-inventory', [new HomeController($auth), 'irdInventoryPage']);
@@ -101,6 +109,19 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) u
     $r->addRoute('POST', '/ird-challan/add', [new HomeController($auth), 'irdChallanAddSubmit']);
 });
 
+$permissionByPath = [
+    '#^/$#' => 'dashboard', '#^/edit-channel/#' => 'edit_channel',
+    '#^/modify-lcn/#' => 'modify_lcn', '#^/swap-lcn/#' => 'swap_lcn',
+    '#^/ird-inventory#' => 'ird', '#^/ird-challan#' => 'ird',
+    '#^/add-(sid|channel|channel-mapping)#' => 'add_records',
+    '#^/ajax/check-sid$#' => 'add_records', '#^/logs$#' => 'logs',
+    '#^/export-logs$#' => 'logs',
+    '#^/lcn-strings$#' => 'generator',
+];
+foreach ($permissionByPath as $pattern => $permission) {
+    if (preg_match($pattern, $request_uri)) { Access::require($permission); }
+}
+
 // Fetch method and URI from somewhere
 $httpMethod = $_SERVER['REQUEST_METHOD'];
 $uri = $_SERVER['REQUEST_URI'];
@@ -142,4 +163,4 @@ switch ($routeInfo[0]) {
         // Call the handler
         call_user_func_array($handler, $vars);
         break;
-} 
+}
